@@ -1,6 +1,5 @@
 """Tests for annex4.render.html."""
 
-
 from annex4.core.schema import (
     AnnexIVDossier,
     GeneralDescription,
@@ -25,8 +24,11 @@ from annex4.render.html import render_html, _field_val
 
 def _prov() -> Provenance:
     return Provenance(
-        source="manual", source_ref="test", extracted_at="2026-01-01",
-        extractor_version="1.0", confidence=1.0,
+        source="manual",
+        source_ref="test",
+        extracted_at="2026-01-01",
+        extractor_version="1.0",
+        confidence=1.0,
     )
 
 
@@ -175,7 +177,9 @@ class TestRenderHTML:
                 name="AUC-ROC",
                 aggregate_value="0.83",
                 subpopulation_breakdown=[
-                    AccuracySubpopulationRow(subpopulation="Female", value="0.81", delta_vs_aggregate="-0.02"),
+                    AccuracySubpopulationRow(
+                        subpopulation="Female", value="0.81", delta_vs_aggregate="-0.02"
+                    ),
                 ],
             )
         ]
@@ -195,8 +199,11 @@ class TestRenderHTML:
         dossier = _minimal_dossier()
         dossier.monitoring_functioning_control.robustness_issues = [
             RobustnessIssue(
-                id="R-01", category="Adversarial input",
-                severity="High", status="Open", rationale="Under investigation",
+                id="R-01",
+                category="Adversarial input",
+                severity="High",
+                status="Open",
+                rationale="Under investigation",
             )
         ]
         html = render_html(dossier)

@@ -20,7 +20,9 @@ def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-def _sm(value: Any, scan_ref: str, extracted_at: str, confidence: float = 0.85) -> Dict[str, Any]:
+def _sm(
+    value: Any, scan_ref: str, extracted_at: str, confidence: float = 0.85
+) -> Dict[str, Any]:
     return {
         "kind": "system_metadata",
         "value": value,
@@ -42,7 +44,7 @@ class GiskardIngestor:
 
     def ingest(self, *, scan_result: Any) -> IngestorOutput:
         try:
-            import giskard  # noqa: F401 — presence check only
+            import giskard  # type: ignore[import-not-found]  # noqa: F401
         except ImportError:
             raise ImportError(
                 "Giskard ingestor requires giskard. "
@@ -75,7 +77,9 @@ class GiskardIngestor:
                         {
                             "name": _sm(metric_name, scan_ref, extracted_at),
                             "aggregate_value": _sm(
-                                str(round(float(metric_value), 6)), scan_ref, extracted_at
+                                str(round(float(metric_value), 6)),
+                                scan_ref,
+                                extracted_at,
                             ),
                         }
                     )
@@ -83,7 +87,11 @@ class GiskardIngestor:
                     pass
 
             name_lower = metric_name.lower()
-            if "bias" in name_lower or "fairness" in name_lower or "disparity" in name_lower:
+            if (
+                "bias" in name_lower
+                or "fairness" in name_lower
+                or "disparity" in name_lower
+            ):
                 bias_items.append(
                     {
                         "attribute": _sm(metric_name, scan_ref, extracted_at),

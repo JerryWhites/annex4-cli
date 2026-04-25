@@ -59,7 +59,9 @@ def _canonical_manifest(entries: Dict[str, str], created_at: str) -> bytes:
         "created_at": created_at,
         "files": dict(sorted(entries.items())),
     }
-    return json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return json.dumps(
+        payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    ).encode("utf-8")
 
 
 # ---------------------------------------------------------------------------
@@ -115,6 +117,7 @@ def create_bundle(
 
         if missing:
             import warnings
+
             warnings.warn(
                 f"Bundle created but {len(missing)} evidence file(s) not found: {missing}",
                 stacklevel=2,

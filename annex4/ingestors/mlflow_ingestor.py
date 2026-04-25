@@ -21,7 +21,9 @@ def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-def _sm(value: Any, run_id: str, extracted_at: str, confidence: float = 0.9) -> Dict[str, Any]:
+def _sm(
+    value: Any, run_id: str, extracted_at: str, confidence: float = 0.9
+) -> Dict[str, Any]:
     """Wrap a scalar value in a SystemMetadata dict."""
     return {
         "kind": "system_metadata",
@@ -47,12 +49,11 @@ class MLflowIngestor:
 
     def ingest(self, *, run_id: str) -> IngestorOutput:
         try:
-            import mlflow
-            import mlflow.tracking
+            import mlflow  # type: ignore[import-not-found]
+            import mlflow.tracking  # type: ignore[import-not-found]
         except ImportError:
             raise ImportError(
-                "MLflow ingestor requires mlflow. "
-                "Install it with: pip install mlflow"
+                "MLflow ingestor requires mlflow. Install it with: pip install mlflow"
             )
 
         if self._tracking_uri:
@@ -74,14 +75,14 @@ class MLflowIngestor:
         # Determine extraction timestamp from run start time if available
         try:
             start_ms = run.info.start_time
-            extracted_at = datetime.fromtimestamp(start_ms / 1000, tz=timezone.utc).isoformat()
+            extracted_at = datetime.fromtimestamp(
+                start_ms / 1000, tz=timezone.utc
+            ).isoformat()
         except (TypeError, AttributeError, OSError):
             extracted_at = _now_iso()
 
         name = (
-            tags.get("model_name")
-            or getattr(run.info, "run_name", None)
-            or run_id[:8]
+            tags.get("model_name") or getattr(run.info, "run_name", None) or run_id[:8]
         )
         version = tags.get("model_version") or tags.get("version") or run_id[:8]
         methodology = params.get("algorithm") or tags.get("algorithm") or ""
@@ -95,7 +96,9 @@ class MLflowIngestor:
         acc_metrics: List[Dict[str, Any]] = [
             {
                 "name": _sm(k, run_id, extracted_at, confidence=0.95),
-                "aggregate_value": _sm(str(round(v, 6)), run_id, extracted_at, confidence=0.95),
+                "aggregate_value": _sm(
+                    str(round(v, 6)), run_id, extracted_at, confidence=0.95
+                ),
             }
             for k, v in metrics.items()
         ]

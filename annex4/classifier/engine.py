@@ -66,8 +66,9 @@ class ClassifierEngine:
         verdict_key = self._infer_verdict_key(annex_iii, classification)
         verdict = self.spec.verdicts.get(verdict_key)
         if verdict is None:
-            verdict = self.spec.verdicts.get("verdict_uncertain",
-                                             next(iter(self.spec.verdicts.values())))
+            verdict = self.spec.verdicts.get(
+                "verdict_uncertain", next(iter(self.spec.verdicts.values()))
+            )
         return self._to_risk_profile(verdict)
 
     # ------------------------------------------------------------------
@@ -143,15 +144,20 @@ class ClassifierEngine:
         if not node.options:
             raise ValueError("Choice question must have options.")
         for i, option in enumerate(node.options):
-            self.console.print(f"  [bold magenta]{i + 1}[/bold magenta]. {option['label']}")
+            self.console.print(
+                f"  [bold magenta]{i + 1}[/bold magenta]. {option['label']}"
+            )
         while True:
             try:
                 choice_str = input("> ")
                 choice_idx = int(choice_str) - 1
                 if 0 <= choice_idx < len(node.options):
                     from typing import cast
+
                     return cast(str, node.options[choice_idx]["label"])
-                self.console.print("[yellow]Invalid selection. Please try again.[/yellow]")
+                self.console.print(
+                    "[yellow]Invalid selection. Please try again.[/yellow]"
+                )
             except (ValueError, IndexError):
                 self.console.print("[yellow]Please enter a valid number.[/yellow]")
 
@@ -159,7 +165,9 @@ class ClassifierEngine:
         if not node.options:
             raise ValueError("Multiple choice question must have options.")
         for i, option in enumerate(node.options):
-            self.console.print(f"  [bold magenta]{i + 1}[/bold magenta]. {option['label']}")
+            self.console.print(
+                f"  [bold magenta]{i + 1}[/bold magenta]. {option['label']}"
+            )
         self.console.print("[dim](Enter comma-separated numbers, e.g., 1,3)[/dim]")
         while True:
             try:
@@ -169,12 +177,17 @@ class ClassifierEngine:
                 choice_indices = {int(c.strip()) - 1 for c in choices_str.split(",")}
                 if all(0 <= i < len(node.options) for i in choice_indices):
                     return {node.options[i]["label"] for i in choice_indices}
-                self.console.print("[yellow]Invalid selection. Please try again.[/yellow]")
+                self.console.print(
+                    "[yellow]Invalid selection. Please try again.[/yellow]"
+                )
             except (ValueError, IndexError):
-                self.console.print("[yellow]Please enter valid, comma-separated numbers.[/yellow]")
+                self.console.print(
+                    "[yellow]Please enter valid, comma-separated numbers.[/yellow]"
+                )
 
     def _get_next_node(self, node: ClassifierQuestion, answer: Any) -> str:
         from typing import cast
+
         if node.next_node:
             return node.next_node
         if node.type == "choice":
@@ -185,7 +198,11 @@ class ClassifierEngine:
             for logic_block in node.next_node_logic:
                 if_condition = logic_block.get("if")
                 if if_condition is not None:
-                    labels = if_condition if isinstance(if_condition, list) else [if_condition]
+                    labels = (
+                        if_condition
+                        if isinstance(if_condition, list)
+                        else [if_condition]
+                    )
                     # `is_not_selected` key at logic_block level means: fire "then" when
                     # labels are NOT present in the answer (used for multiple-choice negation).
                     if "is_not_selected" in logic_block:

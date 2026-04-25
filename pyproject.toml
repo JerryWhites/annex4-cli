@@ -6,20 +6,32 @@ build-backend = "setuptools.build_meta"
 name = "annex4-cli"
 version = "0.1.0"
 description = "EU AI Act (Regulation (EU) 2024/1689) Annex IV technical documentation generator — informational tool, not legal advice"
-authors = [{name = "Jerry Whites", email = "jirka1130@gmail.com"}]
+authors = [{ name = "Jerry Whites" }]
 readme = "README.md"
 requires-python = ">=3.11"
-keywords = ["eu-ai-act", "annex-iv", "compliance-tool", "not-legal-advice", "mlops"]
+license = { text = "Apache-2.0" }
+keywords = [
+    "eu-ai-act",
+    "annex-iv",
+    "compliance",
+    "mlops",
+    "mlflow",
+    "huggingface",
+    "regulation",
+    "ai-governance",
+    "not-legal-advice",
+]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Intended Audience :: Legal Industry",
     "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "Topic :: Office/Business :: Other",
-    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Office/Business",
+    "Topic :: Software Development :: Quality Assurance",
 ]
 dependencies = [
     "click",
@@ -39,6 +51,13 @@ dev = [
     "types-PyYAML",
     "pypdf",
 ]
+
+[project.urls]
+Homepage = "https://github.com/JerryWhites/annex4-cli"
+Documentation = "https://github.com/JerryWhites/annex4-cli#readme"
+Repository = "https://github.com/JerryWhites/annex4-cli"
+Issues = "https://github.com/JerryWhites/annex4-cli/issues"
+Changelog = "https://github.com/JerryWhites/annex4-cli/blob/master/CHANGELOG.md"
 
 [tool.setuptools.packages.find]
 where = ["."]

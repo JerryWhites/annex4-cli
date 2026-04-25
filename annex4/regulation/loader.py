@@ -10,11 +10,13 @@ from .models import (
     ClassifierSpec,
     Recital,
     Regulation,
-    RegulationMetadata
+    RegulationMetadata,
 )
+
 
 class RegulationHashMismatch(ValueError):
     pass
+
 
 class RegulationLoader:
     """Loads a versioned regulation pack from the filesystem."""
@@ -31,6 +33,7 @@ class RegulationLoader:
     def _get_base_path(self) -> Path:
         try:
             import annex4.regulation.versions
+
             return Path(annex4.regulation.versions.__file__).parent / self.version
         except (ImportError, AttributeError):
             return Path(__file__).parent / "versions" / self.version
@@ -41,7 +44,7 @@ class RegulationLoader:
         expected_hash = meta_data.get("content_hash")
         if not expected_hash:
             raise RegulationHashMismatch("No content_hash in metadata.yaml")
-        
+
         calculated_hash = self.compute_content_hash()
         if expected_hash != calculated_hash and expected_hash != "PLACEHOLDER":
             raise RegulationHashMismatch(
@@ -53,8 +56,12 @@ class RegulationLoader:
         h = hashlib.sha256()
         # Sort cross-platform by posix path
         files = sorted(
-            [f for f in self.base_path.rglob("*") if f.is_file() and f.name != "metadata.yaml"],
-            key=lambda x: x.relative_to(self.base_path).as_posix()
+            [
+                f
+                for f in self.base_path.rglob("*")
+                if f.is_file() and f.name != "metadata.yaml"
+            ],
+            key=lambda x: x.relative_to(self.base_path).as_posix(),
         )
         for f in files:
             # Hash the relative path to catch renames, then the content
@@ -78,7 +85,7 @@ class RegulationLoader:
         dir_path = self.base_path / directory
         if not dir_path.exists() or not dir_path.is_dir():
             return []
-        
+
         items = []
         for file_path in sorted(dir_path.glob("*.yaml"), key=lambda x: str(x)):
             with open(file_path, "r", encoding="utf-8") as f:
@@ -91,15 +98,15 @@ class RegulationLoader:
         """Loads the entire regulation pack."""
         metadata_data = self._load_yaml("metadata.yaml")
         classifier_data = self._load_yaml("classification_rules/classifier.yaml")
-        
+
         # Load articles from directory
         articles_raw = self._load_directory_yaml("articles")
         articles = [Article(**a) for a in articles_raw]
-        
+
         # Load annexes from directory
         annexes_raw = self._load_directory_yaml("annexes")
         annexes = [Annex(**a) for a in annexes_raw]
-        
+
         # Load recitals if they exist in a single file
         recitals_data = self._load_yaml("recitals.yaml")
         recitals = [Recital(**r) for r in recitals_data.get("recitals", [])]
@@ -123,6 +130,7 @@ class RegulationLoader:
             return self._load_yaml("diff_substantiality.yaml")
         except FileNotFoundError:
             return {}
+
 
 def get_regulation_loader(version: Optional[str] = None) -> RegulationLoader:
     """Factory function to get a regulation loader."""

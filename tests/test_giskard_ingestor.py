@@ -25,7 +25,11 @@ def _make_scan_result(issues=None, scan_id="scan_001"):
 
 
 def _is_sm(v, source="giskard") -> bool:
-    return isinstance(v, dict) and v.get("kind") == "system_metadata" and v.get("provenance", {}).get("source") == source
+    return (
+        isinstance(v, dict)
+        and v.get("kind") == "system_metadata"
+        and v.get("provenance", {}).get("source") == source
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -100,7 +104,9 @@ class TestGiskardIngestorMapping:
             sys.modules["giskard"] = mock_giskard
             output = GiskardIngestor().ingest(scan_result=sr)
             del sys.modules["giskard"]
-        val = output.data["monitoring_functioning_control"]["accuracy_metrics"][0]["aggregate_value"]["value"]
+        val = output.data["monitoring_functioning_control"]["accuracy_metrics"][0][
+            "aggregate_value"
+        ]["value"]
         assert val == "0.833333"
 
 

@@ -5,6 +5,7 @@ Pydantic models for the AnnexIVDossier
 from typing import Any, Dict, List, Optional, Literal, Union
 from pydantic import BaseModel, Field
 
+
 class Provenance(BaseModel):
     source: Literal["mlflow", "huggingface", "giskard", "manual", "inferred"]
     source_ref: str
@@ -12,11 +13,13 @@ class Provenance(BaseModel):
     extractor_version: str
     confidence: float = Field(ge=0.0, le=1.0)
 
+
 class SystemMetadata(BaseModel):
     kind: Literal["system_metadata"] = "system_metadata"
     value: Union[str, int, float, bool, Dict[str, Any], List[Any]]
     provenance: Provenance
     conflict_resolved: bool = False
+
 
 class ComplianceClaim(BaseModel):
     kind: Literal["compliance_claim"] = "compliance_claim"
@@ -25,6 +28,7 @@ class ComplianceClaim(BaseModel):
     attested_at: str
     evidence_refs: List[str]
     requires_legal_confirmation: bool = False
+
 
 Field_ = Union[str, int, float, bool, SystemMetadata, ComplianceClaim]
 

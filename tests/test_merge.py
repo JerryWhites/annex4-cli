@@ -1,7 +1,11 @@
 """Tests for annex4.core.merge and annex4.ingestors.base."""
 
-
-from annex4.core.merge import deep_merge, merge_ingestor_outputs, _is_sm, _resolve_conflict
+from annex4.core.merge import (
+    deep_merge,
+    merge_ingestor_outputs,
+    _is_sm,
+    _resolve_conflict,
+)
 from annex4.ingestors.base import Ingestor, IngestorOutput
 
 
@@ -74,12 +78,16 @@ class TestMergeIngestorOutputs:
 
     def test_higher_priority_wins_conflict(self):
         low = IngestorOutput(data={"name": "low_val"}, source_name="low", priority=10)
-        high = IngestorOutput(data={"name": "high_val"}, source_name="high", priority=90)
+        high = IngestorOutput(
+            data={"name": "high_val"}, source_name="high", priority=90
+        )
         result = merge_ingestor_outputs([high, low])  # order shouldn't matter
         assert result["name"] == "high_val"
 
     def test_lower_priority_fills_gaps(self):
-        low = IngestorOutput(data={"a": "from_low", "b": "only_low"}, source_name="low", priority=10)
+        low = IngestorOutput(
+            data={"a": "from_low", "b": "only_low"}, source_name="low", priority=10
+        )
         high = IngestorOutput(data={"a": "from_high"}, source_name="high", priority=90)
         result = merge_ingestor_outputs([low, high])
         assert result["a"] == "from_high"
@@ -95,11 +103,13 @@ class TestMergeIngestorOutputs:
     def test_nested_merge(self):
         o1 = IngestorOutput(
             data={"system": {"name": "A", "version": "1.0"}},
-            source_name="mlflow", priority=30,
+            source_name="mlflow",
+            priority=30,
         )
         o2 = IngestorOutput(
             data={"system": {"name": "A", "classification": "High-risk"}},
-            source_name="yaml", priority=80,
+            source_name="yaml",
+            priority=80,
         )
         result = merge_ingestor_outputs([o1, o2])
         assert result["system"]["name"] == "A"
@@ -119,6 +129,7 @@ class TestMergeIngestorOutputs:
         merged = merge_ingestor_outputs([output])
         dossier = AnnexIVDossier.from_yaml_dict(merged)
         from annex4.core.validate import _extract_val
+
         assert _extract_val(dossier.general_description.system.name) == "Merged System"
 
 
@@ -197,16 +208,20 @@ class TestIngestorOutput:
 class TestIngestorProtocol:
     def test_yaml_override_satisfies_protocol(self):
         from annex4.ingestors.yaml_override import YAMLOverrideIngestor
+
         assert isinstance(YAMLOverrideIngestor(), Ingestor)
 
     def test_mlflow_satisfies_protocol(self):
         from annex4.ingestors.mlflow_ingestor import MLflowIngestor
+
         assert isinstance(MLflowIngestor(), Ingestor)
 
     def test_hf_satisfies_protocol(self):
         from annex4.ingestors.hf_ingestor import HuggingFaceIngestor
+
         assert isinstance(HuggingFaceIngestor(), Ingestor)
 
     def test_giskard_satisfies_protocol(self):
         from annex4.ingestors.giskard_ingestor import GiskardIngestor
+
         assert isinstance(GiskardIngestor(), Ingestor)

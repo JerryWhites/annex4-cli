@@ -31,7 +31,11 @@ def _patch_hf(info):
 
 
 def _is_sm(v, source="huggingface") -> bool:
-    return isinstance(v, dict) and v.get("kind") == "system_metadata" and v.get("provenance", {}).get("source") == source
+    return (
+        isinstance(v, dict)
+        and v.get("kind") == "system_metadata"
+        and v.get("provenance", {}).get("source") == source
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -70,7 +74,9 @@ class TestHuggingFaceIngestorMapping:
         info = _make_model_info(card_data=card)
         with patch.dict(sys.modules, _patch_hf(info)):
             output = HuggingFaceIngestor().ingest(model_id="org/model")
-        lim = output.data["monitoring_functioning_control"]["capabilities_and_limitations"]
+        lim = output.data["monitoring_functioning_control"][
+            "capabilities_and_limitations"
+        ]
         assert _is_sm(lim)
         assert lim["value"] == "Not for criminal justice."
 
@@ -107,6 +113,7 @@ class TestHuggingFaceIngestorMapping:
             output = HuggingFaceIngestor().ingest(model_id="acme/scorer")
         from annex4.core.schema import AnnexIVDossier
         from annex4.core.validate import _extract_val
+
         dossier = AnnexIVDossier.from_yaml_dict(output.data)
         assert _extract_val(dossier.general_description.system.name) == "acme/scorer"
 

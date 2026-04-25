@@ -1,10 +1,28 @@
 # annex4-cli
 
+> ⚠️ **Informational tool — not legal advice.**
+> annex4-cli helps you structure, validate, and render Annex IV documentation.
+> It does **not** perform conformity assessment, does **not** replace a
+> Notified Body assessment where Article 43 requires one, and does **not**
+> replace consultation with qualified legal counsel. Responsibility for
+> regulatory compliance remains fully with the provider of the AI system.
+> See [LEGAL.md](LEGAL.md) for the full notice.
+
+[![CI](https://github.com/JerryWhites/annex4-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/JerryWhites/annex4-cli/actions/workflows/ci.yml)
+[![Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)](https://github.com/JerryWhites/annex4-cli)
+[![PyPI](https://img.shields.io/pypi/v/annex4-cli)](https://pypi.org/project/annex4-cli/)
+[![Python](https://img.shields.io/pypi/pyversions/annex4-cli)](https://pypi.org/project/annex4-cli/)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+[![Disclaimer](https://img.shields.io/badge/disclaimer-not%20legal%20advice-red)](LEGAL.md)
+
 **Your AI model is in production. Your lawyer just emailed about the EU AI Act.**
 
 annex4-cli turns Annex IV compliance documentation from a legal fire-drill into a YAML file in your Git repo — validated, versioned, and rendered in under 10 minutes.
 
-> **This is an informational tool, not legal advice.** It does not perform conformity assessment or replace a Notified Body or qualified legal counsel. See [LEGAL.md](LEGAL.md).
+![annex4-cli demo: classify → validate → render → diff in under 60 seconds](docs/demo.gif)
+
+> _Demo: full Annex IV documentation workflow on the
+> [hr_screening reference dossier](examples/hr_screening.yaml) — 35 seconds._
 
 ---
 

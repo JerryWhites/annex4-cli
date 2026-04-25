@@ -526,7 +526,9 @@ class TestErrorCodes:
             ),
             (
                 "development.architecture",
-                lambda d: setattr(d.development_process, "architecture_description", ""),
+                lambda d: setattr(
+                    d.development_process, "architecture_description", ""
+                ),
                 "E012",
             ),
             (

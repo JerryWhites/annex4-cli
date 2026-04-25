@@ -6,10 +6,20 @@ import pytest
 from click.testing import CliRunner
 
 from annex4.cli import cli
-from annex4.core.schema import AnnexIVDossier, SystemMetadata, ComplianceClaim, Provenance
+from annex4.core.schema import (
+    AnnexIVDossier,
+    SystemMetadata,
+    ComplianceClaim,
+    Provenance,
+)
 from annex4.core.diff import (
-    diff_dossiers, traverse_dict, get_substantiality,
-    _flatten_fields, _field_str, _path_section, _compute_factors,
+    diff_dossiers,
+    traverse_dict,
+    get_substantiality,
+    _flatten_fields,
+    _field_str,
+    _path_section,
+    _compute_factors,
 )
 
 
@@ -62,7 +72,11 @@ def diff_rules():
 
 
 def test_flatten_fields_system_metadata():
-    d = {"kind": "system_metadata", "value": "Low Risk", "provenance": {"source": "manual"}}
+    d = {
+        "kind": "system_metadata",
+        "value": "Low Risk",
+        "provenance": {"source": "manual"},
+    }
     assert _flatten_fields(d) == "Low Risk"
 
 
@@ -74,7 +88,11 @@ def test_flatten_fields_compliance_claim():
 def test_flatten_fields_nested_dict():
     d = {
         "system": {
-            "classification": {"kind": "system_metadata", "value": "High Risk", "provenance": {}},
+            "classification": {
+                "kind": "system_metadata",
+                "value": "High Risk",
+                "provenance": {},
+            },
             "version": {"kind": "compliance_claim", "statement": "1.0.0"},
         }
     }
@@ -374,17 +392,23 @@ def test_diff_regulation_version_changed_banner(tmp_path: Path) -> None:
 
 class TestPathSection:
     def test_intended_purpose_maps_to_section_1c(self):
-        sec, name, arts = _path_section("general_description.intended_purpose.description")
+        sec, name, arts = _path_section(
+            "general_description.intended_purpose.description"
+        )
         assert sec == "1c"
         assert "Article 13" in " ".join(arts) or "Annex IV" in " ".join(arts)
 
     def test_data_governance_maps_to_section_2b_with_article_10(self):
-        sec, name, arts = _path_section("development_process.data_governance.training_sources[0].name")
+        sec, name, arts = _path_section(
+            "development_process.data_governance.training_sources[0].name"
+        )
         assert sec == "2b"
         assert any("Article 10" in a for a in arts)
 
     def test_accuracy_metrics_maps_to_section_3a_with_article_15(self):
-        sec, name, arts = _path_section("monitoring_functioning_control.accuracy_metrics[0].aggregate_value")
+        sec, name, arts = _path_section(
+            "monitoring_functioning_control.accuracy_metrics[0].aggregate_value"
+        )
         assert sec == "3a"
         assert any("Article 15" in a for a in arts)
 
@@ -413,7 +437,9 @@ class TestSubstantialityFactors:
         assert all(not f.triggered for f in factors)
 
     def test_f2_cites_article_10(self):
-        factors = _compute_factors(["development_process.data_governance.training_sources"])
+        factors = _compute_factors(
+            ["development_process.data_governance.training_sources"]
+        )
         f2 = next(f for f in factors if f.id == "F2")
         assert any("Article 10" in a for a in f2.articles)
 
@@ -422,21 +448,29 @@ class TestDiffArticle10Integration:
     """Integration test: training_data change flags Article 10 and F2."""
 
     def test_training_source_change_flags_article_10_and_f2(self):
-        old = AnnexIVDossier.from_yaml_dict({
-            "development_process": {
-                "data_governance": {
-                    "training_sources": [{"name": "Dataset A", "origin": "Internal"}]
+        old = AnnexIVDossier.from_yaml_dict(
+            {
+                "development_process": {
+                    "data_governance": {
+                        "training_sources": [
+                            {"name": "Dataset A", "origin": "Internal"}
+                        ]
+                    }
                 }
             }
-        })
-        new = AnnexIVDossier.from_yaml_dict({
-            "development_process": {
-                "data_governance": {
-                    "training_sources": [{"name": "Dataset A", "origin": "Internal"},
-                                         {"name": "Dataset B", "origin": "External"}]
+        )
+        new = AnnexIVDossier.from_yaml_dict(
+            {
+                "development_process": {
+                    "data_governance": {
+                        "training_sources": [
+                            {"name": "Dataset A", "origin": "Internal"},
+                            {"name": "Dataset B", "origin": "External"},
+                        ]
+                    }
                 }
             }
-        })
+        )
         report = diff_dossiers(old, new, {})
 
         # At least one entry in section 2b
@@ -453,7 +487,10 @@ class TestDiffArticle10Integration:
 
     def test_report_legal_notice_contains_article_43(self):
         from annex4.core.diff import DiffReport
-        report = DiffReport(entries=[], has_substantial_changes=False, regulation_version_changed=False)
+
+        report = DiffReport(
+            entries=[], has_substantial_changes=False, regulation_version_changed=False
+        )
         assert "Article 43(4)" in report.LEGAL_NOTICE
         assert "legal judgment" in report.LEGAL_NOTICE
 
@@ -463,9 +500,18 @@ class TestDiffOutputFlag:
         v1 = tmp_path / "v1.yaml"
         v2 = tmp_path / "v2.yaml"
         out = tmp_path / "report.md"
-        v1.write_text("general_description:\n  system:\n    classification: Low\n    regulation_version: '2024-1689_base'\n", encoding="utf-8")
-        v2.write_text("general_description:\n  system:\n    classification: High\n    regulation_version: '2024-1689_base'\n", encoding="utf-8")
-        CliRunner().invoke(cli, ["diff", str(v1), str(v2), "--format", "markdown", "--output", str(out)])
+        v1.write_text(
+            "general_description:\n  system:\n    classification: Low\n    regulation_version: '2024-1689_base'\n",
+            encoding="utf-8",
+        )
+        v2.write_text(
+            "general_description:\n  system:\n    classification: High\n    regulation_version: '2024-1689_base'\n",
+            encoding="utf-8",
+        )
+        CliRunner().invoke(
+            cli,
+            ["diff", str(v1), str(v2), "--format", "markdown", "--output", str(out)],
+        )
         assert out.exists()
         content = out.read_text(encoding="utf-8")
         assert "Change Impact Report" in content
@@ -476,9 +522,17 @@ class TestDiffOutputFlag:
         v1 = tmp_path / "v1.yaml"
         v2 = tmp_path / "v2.yaml"
         out = tmp_path / "report.json"
-        v1.write_text("general_description:\n  system:\n    classification: Low\n    regulation_version: '2024-1689_base'\n", encoding="utf-8")
-        v2.write_text("general_description:\n  system:\n    classification: High\n    regulation_version: '2024-1689_base'\n", encoding="utf-8")
-        CliRunner().invoke(cli, ["diff", str(v1), str(v2), "--format", "json", "--output", str(out)])
+        v1.write_text(
+            "general_description:\n  system:\n    classification: Low\n    regulation_version: '2024-1689_base'\n",
+            encoding="utf-8",
+        )
+        v2.write_text(
+            "general_description:\n  system:\n    classification: High\n    regulation_version: '2024-1689_base'\n",
+            encoding="utf-8",
+        )
+        CliRunner().invoke(
+            cli, ["diff", str(v1), str(v2), "--format", "json", "--output", str(out)]
+        )
         assert out.exists()
         data = json.loads(out.read_text(encoding="utf-8"))
         assert "entries" in data

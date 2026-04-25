@@ -43,7 +43,9 @@ def _build_env() -> Environment:
     )
     env.filters["field_val"] = _field_val
     env.filters["field_list"] = _field_list
-    env.globals["now"] = lambda: datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    env.globals["now"] = lambda: datetime.now(timezone.utc).strftime(
+        "%Y-%m-%d %H:%M UTC"
+    )
     return env
 
 

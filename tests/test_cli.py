@@ -189,11 +189,22 @@ class TestIngestCommand:
     def test_ingest_multiple_overrides_merged_in_order(self, tmp_path):
         o1 = tmp_path / "o1.yaml"
         o2 = tmp_path / "o2.yaml"
-        o1.write_text("general_description:\n  system:\n    name: First\n    version: '1.0'\n")
+        o1.write_text(
+            "general_description:\n  system:\n    name: First\n    version: '1.0'\n"
+        )
         o2.write_text("general_description:\n  system:\n    name: Second\n")
         out = tmp_path / "dossier.yaml"
         result = CliRunner().invoke(
-            cli, ["ingest", "--override", str(o1), "--override", str(o2), "--output", str(out)]
+            cli,
+            [
+                "ingest",
+                "--override",
+                str(o1),
+                "--override",
+                str(o2),
+                "--output",
+                str(out),
+            ],
         )
         assert result.exit_code == 0, result.output
         data = yaml.safe_load(out.read_text())
@@ -214,7 +225,9 @@ class TestIngestCommand:
         mock_mlflow.tracking.MlflowClient.return_value.get_run.return_value = mock_run
 
         out = tmp_path / "dossier.yaml"
-        with patch.dict(sys.modules, {"mlflow": mock_mlflow, "mlflow.tracking": MagicMock()}):
+        with patch.dict(
+            sys.modules, {"mlflow": mock_mlflow, "mlflow.tracking": MagicMock()}
+        ):
             result = CliRunner().invoke(
                 cli, ["ingest", "--mlflow-run", "abc123", "--output", str(out)]
             )
@@ -238,7 +251,9 @@ class TestIngestCommand:
         mock_info.pipeline_tag = "tabular-classification"
         mock_info.tags = []
         mock_info.card_data = {}
-        mock_info.last_modified = "2026-01-15T10:00:00+00:00"  # must be str, not MagicMock
+        mock_info.last_modified = (
+            "2026-01-15T10:00:00+00:00"  # must be str, not MagicMock
+        )
         mock_hub = MagicMock()
         mock_hub.model_info.return_value = mock_info
 
@@ -250,7 +265,10 @@ class TestIngestCommand:
         assert result.exit_code == 0, result.output
         data = yaml.safe_load(out.read_text(encoding="utf-8"))
         # Ingestors now emit SystemMetadata dicts; check wrapped value
-        assert data["general_description"]["system"]["name"]["value"] == "org/credit-scorer"
+        assert (
+            data["general_description"]["system"]["name"]["value"]
+            == "org/credit-scorer"
+        )
 
     def test_ingest_success_message_mentions_source_count(self, tmp_path):
         override = tmp_path / "patch.yaml"

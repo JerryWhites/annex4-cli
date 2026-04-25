@@ -7,7 +7,12 @@ from pathlib import Path
 import yaml
 from click.testing import CliRunner
 
-from annex4.bundle.engine import create_bundle, verify_bundle, _sha256, _canonical_manifest
+from annex4.bundle.engine import (
+    create_bundle,
+    verify_bundle,
+    _sha256,
+    _canonical_manifest,
+)
 from annex4.cli import cli
 
 
@@ -21,7 +26,11 @@ def _write_minimal_dossier(path: Path) -> None:
     dossier = {
         "general_description": {
             "provider": {"name": "Acme AI GmbH"},
-            "system": {"name": "TestSys", "version": "1.0", "regulation_version": "2024-1689_base"},
+            "system": {
+                "name": "TestSys",
+                "version": "1.0",
+                "regulation_version": "2024-1689_base",
+            },
         }
     }
     path.write_text(yaml.dump(dossier, allow_unicode=True), encoding="utf-8")
@@ -74,13 +83,17 @@ class TestSha256Helper:
 
 class TestCanonicalManifest:
     def test_is_valid_json(self):
-        data = _canonical_manifest({"b.txt": "sha256:abc", "a.txt": "sha256:def"}, "2026-01-01T00:00:00")
+        data = _canonical_manifest(
+            {"b.txt": "sha256:abc", "a.txt": "sha256:def"}, "2026-01-01T00:00:00"
+        )
         parsed = json.loads(data)
         assert parsed["bundle_version"] == "1"
         assert "files" in parsed
 
     def test_files_keys_are_sorted(self):
-        data = _canonical_manifest({"z.txt": "h1", "a.txt": "h2"}, "2026-01-01T00:00:00")
+        data = _canonical_manifest(
+            {"z.txt": "h1", "a.txt": "h2"}, "2026-01-01T00:00:00"
+        )
         parsed = json.loads(data)
         keys = list(parsed["files"].keys())
         assert keys == sorted(keys)

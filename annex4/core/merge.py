@@ -29,9 +29,13 @@ def _extracted_at(sm: Dict[str, Any]) -> datetime:
         return datetime.min.replace(tzinfo=timezone.utc)
 
 
-def _resolve_conflict(existing: Dict[str, Any], incoming: Dict[str, Any]) -> Dict[str, Any]:
+def _resolve_conflict(
+    existing: Dict[str, Any], incoming: Dict[str, Any]
+) -> Dict[str, Any]:
     """Pick the SystemMetadata with the newer timestamp; mark conflict_resolved=True."""
-    winner = incoming if _extracted_at(incoming) >= _extracted_at(existing) else existing
+    winner = (
+        incoming if _extracted_at(incoming) >= _extracted_at(existing) else existing
+    )
     result = dict(winner)
     result["conflict_resolved"] = True
     return result

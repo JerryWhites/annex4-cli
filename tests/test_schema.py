@@ -36,15 +36,21 @@ class TestProvenance:
     def test_confidence_must_be_in_range(self):
         with pytest.raises(ValidationError):
             Provenance(
-                source="manual", source_ref="x", extracted_at="2026-01-01",
-                extractor_version="1.0", confidence=1.5,
+                source="manual",
+                source_ref="x",
+                extracted_at="2026-01-01",
+                extractor_version="1.0",
+                confidence=1.5,
             )
 
     def test_invalid_source_literal_rejected(self):
         with pytest.raises(ValidationError):
             Provenance(
-                source="invalid_source", source_ref="x", extracted_at="2026-01-01",
-                extractor_version="1.0", confidence=0.5,
+                source="invalid_source",
+                source_ref="x",
+                extracted_at="2026-01-01",
+                extractor_version="1.0",
+                confidence=0.5,
             )
 
 
@@ -55,8 +61,11 @@ class TestProvenance:
 
 def _prov() -> Provenance:
     return Provenance(
-        source="manual", source_ref="test", extracted_at="2026-01-01",
-        extractor_version="1.0", confidence=1.0,
+        source="manual",
+        source_ref="test",
+        extracted_at="2026-01-01",
+        extractor_version="1.0",
+        confidence=1.0,
     )
 
 
@@ -74,14 +83,19 @@ class TestSystemMetadata:
 class TestComplianceClaim:
     def test_kind_is_literal(self):
         cc = ComplianceClaim(
-            statement="Attested.", attested_by="CTO",
-            attested_at="2026-01-15", evidence_refs=["ev-001"],
+            statement="Attested.",
+            attested_by="CTO",
+            attested_at="2026-01-15",
+            evidence_refs=["ev-001"],
         )
         assert cc.kind == "compliance_claim"
 
     def test_requires_legal_confirmation_defaults_false(self):
         cc = ComplianceClaim(
-            statement="s", attested_by="a", attested_at="d", evidence_refs=[],
+            statement="s",
+            attested_by="a",
+            attested_at="d",
+            evidence_refs=[],
         )
         assert cc.requires_legal_confirmation is False
 
@@ -104,8 +118,10 @@ class TestFieldUnion:
 
     def test_accepts_compliance_claim(self):
         cc = ComplianceClaim(
-            statement="Acme AI GmbH", attested_by="CTO",
-            attested_at="2026-01-01", evidence_refs=[],
+            statement="Acme AI GmbH",
+            attested_by="CTO",
+            attested_at="2026-01-01",
+            evidence_refs=[],
         )
         p = ProviderInfo(name=cc)
         assert isinstance(p.name, ComplianceClaim)
@@ -186,8 +202,13 @@ class TestAnnexIVDossierConstruction:
             }
         }
         d = AnnexIVDossier.from_yaml_dict(raw)
-        assert isinstance(d.general_description.provider.authorized_signatory, ComplianceClaim)
-        assert d.general_description.provider.authorized_signatory.statement == "Jane Smith, CTO"
+        assert isinstance(
+            d.general_description.provider.authorized_signatory, ComplianceClaim
+        )
+        assert (
+            d.general_description.provider.authorized_signatory.statement
+            == "Jane Smith, CTO"
+        )
 
     def test_regulation_version_defaults(self):
         d = AnnexIVDossier()

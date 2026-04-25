@@ -26,6 +26,7 @@ def spec():
 @pytest.fixture(scope="module")
 def engine(spec):
     from rich.console import Console
+
     return ClassifierEngine(spec, Console(quiet=True))
 
 
@@ -37,38 +38,53 @@ def engine(spec):
 class TestRiskProfile:
     def test_is_high_risk_true_for_high_risk_verdict(self):
         p = RiskProfile(
-            path_id="test", verdict="HIGH_RISK_ANNEX_III_§4",
-            citation="Annex III §4", articles=["Article 6(2)"],
+            path_id="test",
+            verdict="HIGH_RISK_ANNEX_III_§4",
+            citation="Annex III §4",
+            articles=["Article 6(2)"],
             conformity_route="internal_control_annex_vi",
             notified_body_required=False,
-            explanation_markdown="x", next_steps="y",
+            explanation_markdown="x",
+            next_steps="y",
         )
         assert p.is_high_risk is True
 
     def test_is_high_risk_false_for_minimal(self):
         p = RiskProfile(
-            path_id="test", verdict="MINIMAL_RISK",
-            citation="Recital 33", articles=[],
+            path_id="test",
+            verdict="MINIMAL_RISK",
+            citation="Recital 33",
+            articles=[],
             conformity_route="not_applicable",
             notified_body_required=False,
-            explanation_markdown="x", next_steps="y",
+            explanation_markdown="x",
+            next_steps="y",
         )
         assert p.is_high_risk is False
 
     def test_needs_annex_iv_true_for_high_risk(self):
         p = RiskProfile(
-            path_id="test", verdict="HIGH_RISK_ANNEX_III_§4",
-            citation="c", articles=[], conformity_route="c",
+            path_id="test",
+            verdict="HIGH_RISK_ANNEX_III_§4",
+            citation="c",
+            articles=[],
+            conformity_route="c",
             notified_body_required=False,
-            explanation_markdown="x", next_steps="y",
+            explanation_markdown="x",
+            next_steps="y",
         )
         assert p.needs_annex_iv is True
 
     def test_disclaimer_is_hardcoded(self):
         p = RiskProfile(
-            path_id="x", verdict="MINIMAL_RISK", citation="c",
-            articles=[], conformity_route="c", notified_body_required=False,
-            explanation_markdown="x", next_steps="y",
+            path_id="x",
+            verdict="MINIMAL_RISK",
+            citation="c",
+            articles=[],
+            conformity_route="c",
+            notified_body_required=False,
+            explanation_markdown="x",
+            next_steps="y",
         )
         assert "not a legal determination" in p.disclaimer
         assert "counsel" in p.disclaimer
@@ -85,6 +101,7 @@ class TestClassifierEngineInteractive:
         inputs = iter(["1", "5", "2", "2", "2", "2"])
         monkeypatch.setattr("builtins.input", lambda _: next(inputs))
         from rich.console import Console
+
         e = ClassifierEngine(spec, Console(quiet=True))
         profile = e.run()
         assert profile.verdict == "MINIMAL_RISK"
@@ -96,10 +113,14 @@ class TestClassifierEngineInteractive:
         inputs = iter(["1", "5", "2", "1", "4"])
         monkeypatch.setattr("builtins.input", lambda _: next(inputs))
         from rich.console import Console
+
         e = ClassifierEngine(spec, Console(quiet=True))
         profile = e.run()
         assert profile.verdict == "HIGH_RISK_ANNEX_III_§4"
-        assert profile.path_id == "annex_iii_4a_employment_article_6_2_internal_control_annex_vi"
+        assert (
+            profile.path_id
+            == "annex_iii_4a_employment_article_6_2_internal_control_annex_vi"
+        )
         assert "Article 6(2)" in profile.articles
         assert "Annex III §4(a)" in " ".join(profile.articles)
         assert profile.conformity_route == "internal_control_annex_vi"
@@ -110,6 +131,7 @@ class TestClassifierEngineInteractive:
         inputs = iter(["1", "5", "1"])
         monkeypatch.setattr("builtins.input", lambda _: next(inputs))
         from rich.console import Console
+
         e = ClassifierEngine(spec, Console(quiet=True))
         profile = e.run()
         assert profile.verdict == "HIGH_RISK_ARTICLE_6_1"
@@ -120,6 +142,7 @@ class TestClassifierEngineInteractive:
         inputs = iter(["1", "3"])
         monkeypatch.setattr("builtins.input", lambda _: next(inputs))
         from rich.console import Console
+
         e = ClassifierEngine(spec, Console(quiet=True))
         profile = e.run()
         assert profile.verdict == "PROHIBITED"
@@ -129,6 +152,7 @@ class TestClassifierEngineInteractive:
         inputs = iter(["2"])
         monkeypatch.setattr("builtins.input", lambda _: next(inputs))
         from rich.console import Console
+
         e = ClassifierEngine(spec, Console(quiet=True))
         profile = e.run()
         assert profile.verdict == "DEPLOYER_REDIRECT"
@@ -138,6 +162,7 @@ class TestClassifierEngineInteractive:
         inputs = iter(["1", "5", "2", "2", "1"])
         monkeypatch.setattr("builtins.input", lambda _: next(inputs))
         from rich.console import Console
+
         e = ClassifierEngine(spec, Console(quiet=True))
         profile = e.run()
         assert profile.verdict == "GPAI_MODEL"
@@ -159,6 +184,7 @@ class TestClassifierEngineFromYaml:
             encoding="utf-8",
         )
         from rich.console import Console
+
         e = ClassifierEngine(spec, Console(quiet=True))
         profile = e.classify_from_yaml(yaml_file)
         assert "ANNEX_III" in profile.verdict
@@ -175,6 +201,7 @@ class TestClassifierEngineFromYaml:
             encoding="utf-8",
         )
         from rich.console import Console
+
         e = ClassifierEngine(spec, Console(quiet=True))
         profile = e.classify_from_yaml(yaml_file)
         assert "ANNEX_III" in profile.verdict
@@ -189,6 +216,7 @@ class TestClassifierEngineFromYaml:
             encoding="utf-8",
         )
         from rich.console import Console
+
         e = ClassifierEngine(spec, Console(quiet=True))
         profile = e.classify_from_yaml(yaml_file)
         assert profile.verdict == "MINIMAL_RISK"
@@ -210,6 +238,7 @@ class TestClassifierEngineFromYaml:
             encoding="utf-8",
         )
         from rich.console import Console
+
         e = ClassifierEngine(spec, Console(quiet=True))
         profile = e.classify_from_yaml(yaml_file)
         assert "ANNEX_III" in profile.verdict
@@ -251,11 +280,14 @@ class TestClassifyCLI:
         )
         out_json = tmp_path / "profile.json"
         result = CliRunner().invoke(
-            classify, [
+            classify,
+            [
                 "--i-acknowledge-uncertainty",
-                "--system", str(yaml_file),
-                "--output", str(out_json),
-            ]
+                "--system",
+                str(yaml_file),
+                "--output",
+                str(out_json),
+            ],
         )
         assert result.exit_code == 0, result.output
         data = json.loads(out_json.read_text(encoding="utf-8"))
@@ -285,6 +317,7 @@ class TestClassifyCLI:
         out_json = None
         import tempfile
         import os
+
         with tempfile.NamedTemporaryFile(suffix=".json", delete=False) as f:
             out_json = Path(f.name)
         try:
@@ -297,7 +330,9 @@ class TestClassifyCLI:
             articles = data["risk_profile"]["articles"]
             assert any("6(2)" in a for a in articles)
             assert any("4" in a for a in articles)
-            assert data["risk_profile"]["conformity_route"] == "internal_control_annex_vi"
+            assert (
+                data["risk_profile"]["conformity_route"] == "internal_control_annex_vi"
+            )
             assert data["risk_profile"]["notified_body_required"] is False
         finally:
             os.unlink(out_json)
@@ -306,4 +341,6 @@ class TestClassifyCLI:
         inputs = iter(["1", "5", "2", "2", "2", "2"])
         monkeypatch.setattr("builtins.input", lambda _: next(inputs))
         result = CliRunner().invoke(classify, ["--i-acknowledge-uncertainty"])
-        assert "not legal" in result.output.lower() or "Not legal advice" in result.output
+        assert (
+            "not legal" in result.output.lower() or "Not legal advice" in result.output
+        )

@@ -19,7 +19,7 @@ def render_pdf(dossier: AnnexIVDossier, output_path: Path) -> None:
     Raises ImportError if weasyprint is not installed.
     """
     try:
-        from weasyprint import HTML
+        from weasyprint import HTML  # type: ignore[import-not-found]
     except ImportError:
         raise ImportError(
             "PDF rendering requires weasyprint.\n"

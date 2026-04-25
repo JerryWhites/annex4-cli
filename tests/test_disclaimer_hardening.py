@@ -12,7 +12,11 @@ import pytest
 from click.testing import CliRunner
 
 from annex4.cli import cli
-from annex4.cli.disclaimer import FULL_DISCLAIMER, DisclaimerRequiredError, print_cli_disclaimer
+from annex4.cli.disclaimer import (
+    FULL_DISCLAIMER,
+    DisclaimerRequiredError,
+    print_cli_disclaimer,
+)
 
 _REPO_ROOT = Path(__file__).parent.parent
 
@@ -51,6 +55,7 @@ class TestEverySubcommandPrintsDisclaimerToStderr:
 
     def test_print_cli_disclaimer_contains_version(self, capsys):
         from annex4 import __version__
+
         print_cli_disclaimer()
         captured = capsys.readouterr()
         assert __version__ in captured.err
@@ -166,12 +171,14 @@ class TestRenderedHTMLDisclaimer:
     def _render_minimal(self) -> str:
         from annex4.core.schema import AnnexIVDossier
         from annex4.render.html import render_html
+
         dossier = AnnexIVDossier()
         return render_html(dossier)
 
     def test_html_title_ends_with_not_legal_advice(self):
         html = self._render_minimal()
         import re
+
         title_match = re.search(r"<title>(.*?)</title>", html, re.DOTALL)
         assert title_match, "No <title> tag found"
         assert "not legal advice" in title_match.group(1).lower()

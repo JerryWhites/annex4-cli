@@ -73,5 +73,6 @@ class Regulation(BaseModel):
 class FieldKinds(BaseModel):
     fields: List[Dict[str, Any]]
 
+
 class HarmonisedStandards(BaseModel):
     standards: List[str]

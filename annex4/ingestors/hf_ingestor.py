@@ -20,7 +20,9 @@ def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-def _sm(value: Any, model_id: str, extracted_at: str, confidence: float = 0.8) -> Dict[str, Any]:
+def _sm(
+    value: Any, model_id: str, extracted_at: str, confidence: float = 0.8
+) -> Dict[str, Any]:
     return {
         "kind": "system_metadata",
         "value": value,
@@ -42,7 +44,7 @@ class HuggingFaceIngestor:
 
     def ingest(self, *, model_id: str, token: Optional[str] = None) -> IngestorOutput:
         try:
-            from huggingface_hub import model_info
+            from huggingface_hub import model_info  # type: ignore[import-not-found]
         except ImportError:
             raise ImportError(
                 "HuggingFace ingestor requires huggingface-hub. "
@@ -58,7 +60,9 @@ class HuggingFaceIngestor:
 
     def _map_model_info(self, info: Any, model_id: str) -> Dict[str, Any]:
         # Use last_modified as extraction timestamp when available
-        last_modified = getattr(info, "last_modified", None) or getattr(info, "lastModified", None)
+        last_modified = getattr(info, "last_modified", None) or getattr(
+            info, "lastModified", None
+        )
         try:
             if isinstance(last_modified, str):
                 extracted_at = last_modified
@@ -82,11 +86,15 @@ class HuggingFaceIngestor:
 
         description = _card_get("model_description", "model_overview", "description")
         intended_use = _card_get("intended_use", "uses", "intended_uses")
-        limitations = _card_get("out_of_scope_use", "limitations", "bias_risks_limitations")
+        limitations = _card_get(
+            "out_of_scope_use", "limitations", "bias_risks_limitations"
+        )
 
         data: Dict[str, Any] = {
             "general_description": {
-                "system": {"name": _sm(model_id, model_id, extracted_at, confidence=0.95)}
+                "system": {
+                    "name": _sm(model_id, model_id, extracted_at, confidence=0.95)
+                }
             }
         }
 
@@ -106,7 +114,9 @@ class HuggingFaceIngestor:
 
         mfc: Dict[str, Any] = {}
         if limitations:
-            mfc["capabilities_and_limitations"] = _sm(limitations, model_id, extracted_at)
+            mfc["capabilities_and_limitations"] = _sm(
+                limitations, model_id, extracted_at
+            )
         if mfc:
             data["monitoring_functioning_control"] = mfc
 
