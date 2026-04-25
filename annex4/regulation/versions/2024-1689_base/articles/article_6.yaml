@@ -1,0 +1,24 @@
+identifier: '6'
+title: Classification rules for high-risk AI systems
+text: '1. Irrespective of whether an AI system is placed on the market or put into
+  service independently from the products referred to in points (a) and (b), that
+  AI system shall be considered high-risk where both of the following conditions are
+  fulfilled:
+
+  (a) the AI system is intended to be used as a safety component of a product, or
+  is itself a product, covered by the Union harmonisation legislation listed in Annex
+  I;
+
+  (b) the product whose safety component is the AI system, or the AI system itself
+  as a product, is required to undergo a third-party conformity assessment with a
+  view to the placing on the market or putting into service of that product pursuant
+  to the Union harmonisation legislation listed in Annex I.
+
+  2. In addition to the high-risk AI systems referred to in paragraph 1, AI systems
+  referred to in Annex III shall also be considered high-risk.
+
+  3. An AI system referred to in Annex III shall not be considered high-risk if it
+  does not pose a significant risk of harm to the health, safety or fundamental rights
+  of natural persons, including by not materially influencing the outcome of decision-making.
+
+  '

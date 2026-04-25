@@ -1,0 +1,84 @@
+# Technical Documentation for AI System: {{ (overrides.get('system_identity', {}) or {}).get('name', 'Unnamed System') }}
+
+**Regulation Version:** `{{ regulation.metadata.version_id }}`
+**Generated on:** `{{ now() }}`
+
+---
+
+## 1. General Description
+
+A general description of the AI system, its intended purpose, its intended users, and the specific context in which it is to be used.
+
+* **Intended Purpose:**
+  > {{ (overrides.get('intended_purpose', {}) or {}).get('description', '[Not provided]') }}
+
+* **Intended Users:**
+  > {{ (overrides.get('intended_purpose', {}) or {}).get('intended_users', '[Not provided]') }}
+
+* **Context of Use:**
+  > {{ (overrides.get('intended_purpose', {}) or {}).get('context_of_use', '[Not provided]') }}
+
+---
+
+## 2. Risk Classification Result
+
+* **Final Verdict:** **{{ verdict.verdict }}**
+* **Legal Citation:** {{ verdict.citation }}
+* **Explanation:** {{ verdict.explanation_markdown }}
+
+### Classification Journey
+
+| Question | Answer(s) |
+| -------- | --------- |
+{% for q_id, answer in answers.items() -%}
+{% if q_id in regulation.classifier_spec.tree -%}
+| {{ regulation.classifier_spec.tree[q_id].question }} | {{ answer }} |
+{% endif -%}
+{% endfor %}
+
+---
+
+## 3. Conformity Assessment
+
+{% set v = verdict.verdict %}
+{% if "HIGH_RISK" in v or "High-Risk" in v %}
+### For High-Risk AI Systems (Annex IV)
+
+The following obligations apply to this system under Regulation (EU) 2024/1689:
+
+- **Article 9** – Risk management system must be established and maintained throughout the lifecycle
+- **Article 10** – Training, validation, and test data must meet quality criteria; bias must be examined
+- **Article 11** – Technical documentation (Annex IV) must be kept up to date
+- **Article 13** – System must provide adequate transparency and instructions for use
+- **Article 14** – Appropriate human oversight measures must be implemented
+- **Article 15** – Accuracy, robustness and cybersecurity must be ensured
+- **Third-party conformity assessment** may be required before market placement (Article 43)
+
+#### Required Annex IV Documentation Elements
+
+1. A detailed description of the elements of the AI system and the process for its development, including the methods and steps used
+2. Detailed information about the monitoring, functioning and control of the AI system
+3. Description of the risk management system established under Article 9
+4. A description of any changes made to the system throughout its lifecycle
+5. A list of harmonised standards applied in full or in part
+6. EU declaration of conformity as referred to in Article 47
+7. Post-market monitoring plan in accordance with Article 72
+8. Serious incidents log in accordance with Article 73
+
+> **Next step:** Run `annex4 init --output dossier.yaml` to create a full dossier template,
+> then fill in all sections and run `annex4 render dossier.yaml --output documentation.md`
+> to generate a complete Annex IV document.
+{% else %}
+No mandatory obligations under Annex IV of the EU AI Act apply to this system.
+Voluntary adherence to best practices is encouraged.
+{% endif %}
+
+---
+
+## 4. Annexes Reference
+
+- **Annex I:** List of AI techniques and approaches
+- **Annex II:** List of Union harmonisation legislation
+- **Annex III:** List of high-risk AI systems referred to in Article 6
+
+*(Refer to the full text of Regulation (EU) 2024/1689 for details.)*

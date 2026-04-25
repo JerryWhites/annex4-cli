@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Informational tool output; not legal advice.">
+  <meta name="generator" content="annex4-cli">
+  <title>{{ dossier.general_description.system.name | field_val }} v{{ dossier.general_description.system.version | field_val }} Annex IV Technical Documentation — annex4-cli draft, not legal advice</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: Georgia, "Times New Roman", serif; font-size: 14px; line-height: 1.7;
+           color: #1a1a1a; max-width: 1000px; margin: 0 auto; padding: 2.5rem 2rem; }
+    h1 { font-size: 1.7rem; border-bottom: 3px solid #003399; padding-bottom: 0.4rem; margin-bottom: 0.3rem; }
+    h2 { font-size: 1.25rem; border-bottom: 1px solid #003399; color: #003399;
+         margin-top: 2.5rem; padding-bottom: 0.2rem; }
+    h3 { font-size: 1rem; margin-top: 1.4rem; margin-bottom: 0.3rem; color: #333; }
+    table { width: 100%; border-collapse: collapse; margin: 0.8rem 0 1.2rem; font-size: 13px; }
+    th { background: #003399; color: #fff; padding: 0.4rem 0.6rem; text-align: left; font-weight: bold; }
+    td { padding: 0.4rem 0.6rem; border-bottom: 1px solid #dde; vertical-align: top; }
+    tr:nth-child(even) td { background: #f4f6fb; }
+    .meta-table td:first-child { font-weight: bold; width: 40%; color: #444; }
+    .disclaimer { background: #fffbe6; border-left: 4px solid #e0b800; padding: 0.8rem 1rem;
+                  margin: 1.2rem 0; font-size: 13px; }
+    .toc { background: #f0f4ff; border: 1px solid #c0cff0; border-radius: 4px;
+           padding: 1rem 1.5rem; margin-bottom: 2rem; }
+    .toc ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+    .toc li { margin: 0.2rem 0; }
+    .toc a { color: #003399; text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+    .cite { font-size: 11px; color: #666; font-style: italic; margin-left: 0.5rem; }
+    .badge-high { color: #cc0000; font-weight: bold; }
+    .badge-medium { color: #e07000; font-weight: bold; }
+    .badge-open { color: #cc0000; }
+    .badge-closed { color: #008800; }
+    .empty { color: #999; font-style: italic; }
+    .footer { margin-top: 3rem; border-top: 1px solid #ccc; padding-top: 0.8rem;
+              font-size: 11px; color: #888; text-align: center; }
+    @media print { body { max-width: 100%; padding: 1rem; } h2 { page-break-before: always; } }
+    @page { margin: 2cm; @bottom-center { content: "annex4-cli draft, not legal advice — " attr(data-reg-version); font-size: 9px; color: #888; } }
+  </style>
+</head>
+<body>
+
+{% set sys = dossier.general_description.system %}
+{% set prov = dossier.general_description.provider %}
+{% set ip = dossier.general_description.intended_purpose %}
+{% set dev = dossier.development_process %}
+{% set mfc = dossier.monitoring_functioning_control %}
+{% set rm = dossier.risk_management %}
+{% set lc = dossier.lifecycle_changes %}
+{% set pmm = dossier.post_market_monitoring %}
+{% set decl = dossier.eu_declaration_of_conformity %}
+
+<h1>Annex IV Technical Documentation</h1>
+<p>
+  <strong>{{ sys.name | field_val }}</strong> &mdash; v{{ sys.version | field_val }}<br>
+  <span class="cite">Regulation (EU) 2024/1689 &bull; Annex IV</span>
+</p>
+
+<div class="disclaimer">
+  <strong>Scope.</strong> This technical documentation is produced to support compliance with
+  Article&nbsp;11 and Annex&nbsp;IV of Regulation&nbsp;(EU)&nbsp;2024/1689. It does not
+  constitute a conformity assessment. This document is informational and is not legal advice.
+</div>
+
+<div class="toc">
+  <strong>Table of Contents</strong>
+  <ol>
+    <li><a href="#s1">General description of the AI system</a></li>
+    <li><a href="#s2">Detailed description of elements and development process</a></li>
+    <li><a href="#s3">Monitoring, functioning and control</a></li>
+    <li><a href="#s4">Risk management system (Article 9)</a></li>
+    <li><a href="#s5">Lifecycle changes</a></li>
+    <li><a href="#s6">Harmonised standards applied</a></li>
+    <li><a href="#s7">EU declaration of conformity</a></li>
+    <li><a href="#s8">Post-market monitoring plan (Article 72)</a></li>
+    <li><a href="#s9">Serious incidents log (Article 73)</a></li>
+    <li><a href="#sa">Appendix A &mdash; Evidence index</a></li>
+  </ol>
+</div>
+
+<!-- ═══════════════════════════ Section 1 ═══════════════════════════ -->
+<h2 id="s1">1. General description of the AI system <span class="cite">Annex IV §1</span></h2>
+
+<h3>1.1 Provider</h3>
+<table class="meta-table">
+  <tr><td>Provider name</td><td>{{ prov.name | field_val }}</td></tr>
+  <tr><td>Registration number</td><td>{{ prov.registration_number | field_val }}</td></tr>
+  <tr><td>Registered address</td><td>{{ prov.address | field_val }}</td></tr>
+  <tr><td>Market surveillance contact</td><td>{{ prov.contact_email | field_val }}</td></tr>
+  <tr><td>Authorised signatory</td><td>{{ prov.authorized_signatory | field_val }}</td></tr>
+  <tr><td>AI Governance owner</td><td>{{ prov.ai_governance_owner | field_val }}</td></tr>
+  <tr><td>EU representative</td><td>{{ prov.eu_representative | field_val }}</td></tr>
+</table>
+
+<h3>1.2 System identity</h3>
+<table class="meta-table">
+  <tr><td>System name</td><td>{{ sys.name | field_val }}</td></tr>
+  <tr><td>Version</td><td>{{ sys.version | field_val }}</td></tr>
+  <tr><td>Git commit</td><td>{{ sys.git_commit | field_val }}</td></tr>
+  <tr><td>Release date</td><td>{{ sys.release_date | field_val }}</td></tr>
+  <tr><td>Risk classification</td><td>{{ sys.classification | field_val }}</td></tr>
+  <tr><td>Annex III category</td><td>{{ sys.annex_iii_category | field_val }}</td></tr>
+  <tr><td>Regulation version</td><td>{{ sys.regulation_version | field_val }}</td></tr>
+</table>
+
+<h3>1.3 Intended purpose</h3>
+<table class="meta-table">
+  <tr><td>Description</td><td>{{ ip.description | field_val }}</td></tr>
+  <tr><td>Intended users</td><td>{{ ip.intended_users | field_val }}</td></tr>
+  <tr><td>Deployment form</td><td>{{ ip.deployment_form | field_val }}</td></tr>
+  <tr><td>Geographic scope</td><td>{{ ip.geographic_scope | field_val }}</td></tr>
+  <tr><td>Persons affected</td><td>{{ ip.persons_affected | field_val }}</td></tr>
+</table>
+
+{% if ip.foreseeable_misuse %}
+<h3>1.4 Foreseeable misuse</h3>
+<ul>
+  {% for item in ip.foreseeable_misuse %}<li>{{ item | field_val }}</li>{% endfor %}
+</ul>
+{% endif %}
+
+<!-- ═══════════════════════════ Section 2 ═══════════════════════════ -->
+<h2 id="s2">2. Development process <span class="cite">Annex IV §2</span></h2>
+
+<table class="meta-table">
+  <tr><td>Methodology</td><td>{{ dev.methodology | field_val }}</td></tr>
+  <tr><td>Architecture</td><td>{{ dev.architecture_description | field_val }}</td></tr>
+  <tr><td>Inputs</td><td>{{ dev.input_description | field_val }}</td></tr>
+  <tr><td>Outputs</td><td>{{ dev.output_description | field_val }}</td></tr>
+  <tr><td>Pre-trained components</td><td>{{ dev.pre_trained_components | field_val }}</td></tr>
+  <tr><td>Design choices rationale</td><td>{{ dev.design_choices_rationale | field_val }}</td></tr>
+</table>
+
+<h3>2.1 Training data sources</h3>
+{% if dev.data_governance.training_sources %}
+<table>
+  <tr><th>Name</th><th>Origin</th><th>Volume</th><th>Licence</th></tr>
+  {% for src in dev.data_governance.training_sources %}
+  <tr>
+    <td>{{ src.name | field_val }}</td>
+    <td>{{ src.origin | field_val }}</td>
+    <td>{{ src.volume | field_val }}</td>
+    <td>{{ src.license | field_val }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p class="empty">No training data sources documented.</p>
+{% endif %}
+
+<h3>2.2 Bias analysis</h3>
+{% if dev.data_governance.bias_analysis %}
+<table>
+  <tr><th>Attribute</th><th>Population share</th><th>Reference share</th><th>Delta</th><th>Action taken</th></tr>
+  {% for row in dev.data_governance.bias_analysis %}
+  <tr>
+    <td>{{ row.attribute | field_val }}</td>
+    <td>{{ row.population_share | field_val }}</td>
+    <td>{{ row.reference_share | field_val }}</td>
+    <td>{{ row.delta | field_val }}</td>
+    <td>{{ row.action_taken | field_val }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p class="empty">No bias analysis documented.</p>
+{% endif %}
+
+<!-- ═══════════════════════════ Section 3 ═══════════════════════════ -->
+<h2 id="s3">3. Monitoring, functioning and control <span class="cite">Annex IV §3 / Article 15</span></h2>
+
+<table class="meta-table">
+  <tr><td>Capabilities and limitations</td><td>{{ mfc.capabilities_and_limitations | field_val }}</td></tr>
+  <tr><td>Foreseeable unintended outcomes</td><td>{{ mfc.foreseeable_unintended_outcomes | field_val }}</td></tr>
+  <tr><td>Human oversight measures</td><td>{{ mfc.human_oversight_measures | field_val }}</td></tr>
+  <tr><td>Cybersecurity measures</td><td>{{ mfc.cybersecurity_measures | field_val }}</td></tr>
+</table>
+
+<h3>3.1 Accuracy metrics</h3>
+{% if mfc.accuracy_metrics %}
+{% for metric in mfc.accuracy_metrics %}
+<h4>{{ metric.name | field_val }}</h4>
+<table class="meta-table">
+  <tr><td>Aggregate value</td><td>{{ metric.aggregate_value | field_val }}</td></tr>
+  <tr><td>Confidence interval</td><td>{{ metric.confidence_interval | field_val }}</td></tr>
+  <tr><td>Methodology note</td><td>{{ metric.methodology_note | field_val }}</td></tr>
+</table>
+{% if metric.subpopulation_breakdown %}
+<table>
+  <tr><th>Subpopulation</th><th>N</th><th>Value</th><th>CI</th><th>Δ vs. aggregate</th></tr>
+  {% for row in metric.subpopulation_breakdown %}
+  <tr>
+    <td>{{ row.subpopulation | field_val }}</td>
+    <td>{{ row.n | field_val }}</td>
+    <td>{{ row.value | field_val }}</td>
+    <td>{{ row.confidence_interval | field_val }}</td>
+    <td>{{ row.delta_vs_aggregate | field_val }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+{% endfor %}
+{% else %}
+<p class="empty">No accuracy metrics documented.</p>
+{% endif %}
+
+<h3>3.2 Robustness issues</h3>
+{% if mfc.robustness_issues %}
+<table>
+  <tr><th>ID</th><th>Category</th><th>Severity</th><th>Status</th><th>Rationale</th></tr>
+  {% for issue in mfc.robustness_issues %}
+  <tr>
+    <td>{{ issue.id | field_val }}</td>
+    <td>{{ issue.category | field_val }}</td>
+    <td class="badge-{{ (issue.severity | field_val) | lower }}">{{ issue.severity | field_val }}</td>
+    <td class="badge-{{ (issue.status | field_val) | lower }}">{{ issue.status | field_val }}</td>
+    <td>{{ issue.rationale | field_val }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p class="empty">No robustness issues logged.</p>
+{% endif %}
+
+<!-- ═══════════════════════════ Section 4 ═══════════════════════════ -->
+<h2 id="s4">4. Risk management system <span class="cite">Article 9</span></h2>
+
+<table class="meta-table">
+  <tr><td>Process description</td><td>{{ rm.process_description | field_val }}</td></tr>
+  <tr><td>Residual risk acceptance</td><td>{{ rm.residual_risk_acceptance | field_val }}</td></tr>
+</table>
+
+{% if rm.identified_risks %}
+<table>
+  <tr><th>Risk</th><th>Likelihood</th><th>Impact</th><th>Mitigation</th><th>Residual risk</th><th>Accepted by</th></tr>
+  {% for risk in rm.identified_risks %}
+  <tr>
+    <td>{{ risk.risk | field_val }}</td>
+    <td>{{ risk.likelihood | field_val }}</td>
+    <td>{{ risk.impact | field_val }}</td>
+    <td>{{ risk.mitigation | field_val }}</td>
+    <td>{{ risk.residual_risk | field_val }}</td>
+    <td>{{ risk.accepted_by | field_val }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p class="empty">No risks identified.</p>
+{% endif %}
+
+<!-- ═══════════════════════════ Section 5 ═══════════════════════════ -->
+<h2 id="s5">5. Lifecycle changes <span class="cite">Article 16(d)</span></h2>
+
+<table class="meta-table">
+  <tr><td>Previous version</td><td>{{ lc.previous_version | field_val }}</td></tr>
+  <tr><td>Substantiality assessment</td><td>{{ lc.substantiality_assessment | field_val }}</td></tr>
+</table>
+
+{% if lc.changes %}
+<table>
+  <tr><th>Field</th><th>Change description</th><th>Trigger</th><th>Substantial?</th><th>Approved by</th></tr>
+  {% for chg in lc.changes %}
+  <tr>
+    <td>{{ chg.field | field_val }}</td>
+    <td>{{ chg.change_description | field_val }}</td>
+    <td>{{ chg.trigger | field_val }}</td>
+    <td>{{ chg.is_substantial | field_val }}</td>
+    <td>{{ chg.approved_by | field_val }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p class="empty">No lifecycle changes recorded.</p>
+{% endif %}
+
+<!-- ═══════════════════════════ Section 6 ═══════════════════════════ -->
+<h2 id="s6">6. Harmonised standards <span class="cite">Annex IV §6</span></h2>
+
+{% if dossier.harmonised_standards %}
+<table>
+  <tr><th>Standard</th><th>Clause</th><th>Conformance</th><th>Evidence</th></tr>
+  {% for std in dossier.harmonised_standards %}
+  <tr>
+    <td>{{ std.standard | field_val }}</td>
+    <td>{{ std.clause | field_val }}</td>
+    <td>{{ std.conformance | field_val }}</td>
+    <td>{{ std.evidence | field_val }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p class="empty">No harmonised standards referenced.</p>
+{% endif %}
+
+<!-- ═══════════════════════════ Section 7 ═══════════════════════════ -->
+<h2 id="s7">7. EU declaration of conformity <span class="cite">Annex IV §7 / Article 47</span></h2>
+
+<table class="meta-table">
+  <tr><td>Declaration reference</td><td>{{ decl.declaration_reference | field_val }}</td></tr>
+  <tr><td>Declaration date</td><td>{{ decl.declaration_date | field_val }}</td></tr>
+  <tr><td>Notified body required</td><td>{{ decl.notified_body_required | field_val }}</td></tr>
+  <tr><td>Notified body name</td><td>{{ decl.notified_body_name | field_val }}</td></tr>
+  <tr><td>Notified body certificate</td><td>{{ decl.notified_body_certificate | field_val }}</td></tr>
+  <tr><td>Notes</td><td>{{ decl.notes | field_val }}</td></tr>
+</table>
+
+<!-- ═══════════════════════════ Section 8 ═══════════════════════════ -->
+<h2 id="s8">8. Post-market monitoring plan <span class="cite">Article 72</span></h2>
+
+<table class="meta-table">
+  <tr><td>Monitoring approach</td><td>{{ pmm.monitoring_approach | field_val }}</td></tr>
+  <tr><td>Drift detection method</td><td>{{ pmm.drift_detection_method | field_val }}</td></tr>
+  <tr><td>Update trigger thresholds</td><td>{{ pmm.update_trigger_thresholds | field_val }}</td></tr>
+  <tr><td>Responsible person</td><td>{{ pmm.responsible_person | field_val }}</td></tr>
+  <tr><td>Review frequency</td><td>{{ pmm.review_frequency | field_val }}</td></tr>
+</table>
+
+{% if pmm.key_performance_indicators %}
+<h3>Key performance indicators</h3>
+<ul>
+  {% for kpi in pmm.key_performance_indicators %}<li>{{ kpi | field_val }}</li>{% endfor %}
+</ul>
+{% endif %}
+
+<!-- ═══════════════════════════ Section 9 ═══════════════════════════ -->
+<h2 id="s9">9. Serious incidents log <span class="cite">Article 73</span></h2>
+
+{% if dossier.serious_incidents %}
+<table>
+  <tr><th>ID</th><th>Date</th><th>Description</th><th>Severity</th><th>Root cause</th><th>Corrective action</th><th>Reported to</th></tr>
+  {% for inc in dossier.serious_incidents %}
+  <tr>
+    <td>{{ inc.incident_id | field_val }}</td>
+    <td>{{ inc.date | field_val }}</td>
+    <td>{{ inc.description | field_val }}</td>
+    <td>{{ inc.severity | field_val }}</td>
+    <td>{{ inc.root_cause | field_val }}</td>
+    <td>{{ inc.corrective_action | field_val }}</td>
+    <td>{{ inc.reported_to | field_val }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p class="empty">No serious incidents recorded.</p>
+{% endif %}
+
+<!-- ═══════════════════════════ Appendix A ═══════════════════════════ -->
+<h2 id="sa">Appendix A — Evidence index</h2>
+
+{% if dossier.evidence_index %}
+<table>
+  <tr><th>ID</th><th>Type</th><th>URI</th><th>Used in sections</th></tr>
+  {% for ev in dossier.evidence_index %}
+  <tr>
+    <td>{{ ev.id | field_val }}</td>
+    <td>{{ ev.type | field_val }}</td>
+    <td>{{ ev.uri | field_val }}</td>
+    <td>{{ ev.used_in_sections | field_list | join(", ") }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p class="empty">No evidence items indexed.</p>
+{% endif %}
+
+<!-- ═══════════════ Appendix B — Provenance table ═══════════════ -->
+<h2 id="sb">Appendix B — Field provenance</h2>
+<p class="section-cite">Every field extracted by an ingestor carries machine-readable provenance.
+Fields attested by a human carry a ComplianceClaim reference.</p>
+
+{% macro prov_row(label, field_obj) %}
+{% set val = field_obj | field_val %}
+{% if val != "—" %}
+{% if field_obj is mapping and field_obj.get("kind") == "system_metadata" %}
+<tr>
+  <td>{{ label }}</td>
+  <td>{{ field_obj.value }}</td>
+  <td>{{ field_obj.provenance.source }}</td>
+  <td>{{ field_obj.provenance.source_ref }}</td>
+  <td>{{ field_obj.provenance.extracted_at[:10] }}</td>
+  <td>{{ field_obj.provenance.confidence }}</td>
+  {% if field_obj.conflict_resolved %}<td>⚠ resolved</td>{% else %}<td>—</td>{% endif %}
+</tr>
+{% elif field_obj is mapping and field_obj.get("kind") == "compliance_claim" %}
+<tr>
+  <td>{{ label }}</td>
+  <td>{{ field_obj.statement[:60] }}{% if field_obj.statement | length > 60 %}…{% endif %}</td>
+  <td colspan="3">ComplianceClaim attested by {{ field_obj.attested_by }} on {{ field_obj.attested_at }}</td>
+  <td>—</td><td>—</td>
+</tr>
+{% endif %}
+{% endif %}
+{% endmacro %}
+
+<table>
+  <tr><th>Field</th><th>Value</th><th>Source</th><th>Ref</th><th>Extracted</th><th>Confidence</th><th>Conflict</th></tr>
+  {{ prov_row("provider.name", dossier.general_description.provider.name) }}
+  {{ prov_row("provider.contact_email", dossier.general_description.provider.contact_email) }}
+  {{ prov_row("provider.authorized_signatory", dossier.general_description.provider.authorized_signatory) }}
+  {{ prov_row("system.name", dossier.general_description.system.name) }}
+  {{ prov_row("system.version", dossier.general_description.system.version) }}
+  {{ prov_row("system.classification", dossier.general_description.system.classification) }}
+  {{ prov_row("system.git_commit", dossier.general_description.system.git_commit) }}
+  {{ prov_row("intended_purpose.description", dossier.general_description.intended_purpose.description) }}
+  {{ prov_row("development.methodology", dossier.development_process.methodology) }}
+  {{ prov_row("mfc.human_oversight_measures", dossier.monitoring_functioning_control.human_oversight_measures) }}
+</table>
+
+<div class="disclaimer" style="margin-top:2rem; border-left-color:#003399;">
+  <strong>annex4-cli v{{ now() | truncate(4, True, '') }} — informational tool only, not legal advice.</strong><br>
+  {{ "This technical documentation is produced by annex4-cli to support compliance with Article 11 and Annex IV of Regulation (EU) 2024/1689. It does not constitute a conformity assessment. Where third-party conformity assessment by a notified body is required under Article 43, obtaining that assessment remains the responsibility of the provider. This document is informational; it is not legal advice." }}
+</div>
+
+<div class="footer">
+  annex4-cli — informational tool, not legal advice &bull; {{ now() }} &bull; Regulation (EU) 2024/1689
+</div>
+
+</body>
+</html>

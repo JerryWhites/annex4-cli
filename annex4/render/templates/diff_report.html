@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Annex IV Diff Report</title>
+<style>
+body { font-family: sans-serif; margin: 2em; }
+table { border-collapse: collapse; width: 100%; }
+th, td { border: 1px solid #ddd; padding: 8px; }
+th { background-color: #f2f2f2; }
+.substantial { color: red; font-weight: bold; }
+.ambiguous { color: orange; font-weight: bold; }
+.non_substantial { color: green; }
+.added { background-color: #e6ffe6; }
+.removed { background-color: #ffe6e6; }
+.modified { background-color: #ffffe6; }
+</style>
+</head>
+<body>
+<h1>Annex IV Diff Report</h1>
+<p><b>Old Version:</b> {{ report.old_version }}</p>
+<p><b>New Version:</b> {{ report.new_version }}</p>
+
+{% if report.regulation_version_changed %}
+<div style="background-color: #fff3cd; padding: 10px; border-left: 6px solid #ffeeba;">
+<strong>Warning:</strong> The regulation version changed between these two dossiers. Some differences may be due to regulatory updates rather than system changes.
+</div>
+{% endif %}
+
+{% if not report.entries %}
+<p>No changes detected between the two dossiers.</p>
+{% else %}
+<table>
+  <tr>
+    <th>Path</th>
+    <th>Kind</th>
+    <th>Substantiality</th>
+    <th>Citations</th>
+    <th>Old Value</th>
+    <th>New Value</th>
+  </tr>
+  {% for entry in report.entries %}
+  <tr class="{{ entry.kind }}">
+    <td><code>{{ entry.path }}</code></td>
+    <td>{{ entry.kind }}</td>
+    <td class="{{ entry.substantiality }}">{{ entry.substantiality }}</td>
+    <td>{{ entry.citations | join(', ') }}</td>
+    <td>{{ entry.old_value | default('N/A', true) }}</td>
+    <td>{{ entry.new_value | default('N/A', true) }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+</body>
+</html>

@@ -1,0 +1,275 @@
+meta:
+  generated_by: annex4-cli
+  regulation_version: 2024-1689_base
+  dossier_schema_version: 1.0.0
+
+general_description:
+  provider:
+    name: FinAI Solutions B.V.
+    registration_number: KvK 87654321 (Amsterdam)
+    address: Herengracht 182, 1016 BR Amsterdam, Netherlands
+    contact_email: ai-compliance@finai-solutions.eu
+    authorized_signatory: Pieter van der Berg, Chief Risk Officer
+    ai_governance_owner: Sophie Müller, AI Ethics Officer
+    eu_representative: FinAI Solutions B.V. (established in the Union)
+
+  system:
+    name: CreditSense Pro
+    version: 2.1.0
+    git_commit: b7d4e891
+    release_date: "2026-02-01"
+    classification: "High-risk — Annex III §5(b), Article 6(2)"
+    annex_iii_category: "Access to essential private services — creditworthiness assessment — Annex III §5(b)"
+    regulation_version: 2024-1689_base
+
+  intended_purpose:
+    description: >
+      CreditSense Pro assesses the creditworthiness of natural persons applying for
+      retail credit products (personal loans, credit cards, mortgages) at partner
+      financial institutions. The system produces a credit score [0–1000] and a
+      risk tier (A–E). Loan officers use the output as one input in the credit
+      decision process — it does not make or automate credit decisions.
+    intended_users: >
+      Loan officers and credit analysts at partner financial institutions.
+      All credit decisions require human review.
+    deployment_form: API integration with partner banking core systems; web dashboard
+    geographic_scope: EU member states — validated on data from DE, NL, FR, BE, AT
+    persons_affected: >
+      EU natural persons applying for retail credit at institutions using CreditSense Pro.
+      Applicants are informed of AI-assisted assessment in pre-contractual documents.
+    foreseeable_misuse:
+      - Automated rejection without loan officer review
+      - Use outside validated product types (e.g., commercial credit, SME lending)
+      - Deployment in member states outside validated scope
+      - Use without providing applicants the right to human review (GDPR Art. 22)
+
+development_process:
+  methodology: >
+    Ensemble model: logistic regression (interpretability) + LightGBM (predictive lift)
+    combined via stacking. Trained on 36 months of credit performance panel data.
+    Separate sub-models per product type (personal loan, credit card, mortgage)
+    routed by a product classifier. No online learning; all models stateless.
+
+  architecture_description: >
+    Three-stage pipeline: (1) product classifier → (2) product-specific LightGBM/LR
+    ensemble producing probability of default (12-month horizon) → (3) score calibration
+    layer mapping to [0–1000] scale and A–E risk tier. All components versioned and
+    immutable at inference time.
+
+  input_description: >
+    Credit bureau data (payment history 36 months, utilisation, account count,
+    derogatory marks), application data (amount, term, purpose), and verified income.
+    No behavioural, social media, or non-financial alternative data. PII stripped
+    before model inference.
+
+  output_description: >
+    Credit score [0–1000], risk tier (A–E), 12-month probability of default,
+    top-5 contributing factors in plain language for regulatory disclosure.
+
+  pre_trained_components: None.
+
+  design_choices_rationale: >
+    Logistic regression component maintained for EBA internal model governance
+    compliance (interpretability requirement). LightGBM adds ~0.03 AUC lift.
+
+  data_governance:
+    training_sources:
+      - name: FinAI Credit Performance Panel 2021–2024
+        origin: Anonymised credit data from 8 partner banks; GDPR-compliant DSAs
+        volume: 4 200 000 loan observations; 312 000 default events
+        license: Bilateral Data Sharing Agreements
+        evidence_uri: evidence/dsa_register_v2.1.pdf
+      - name: Creditreform Bureau Data (DE, AT)
+        origin: Creditreform AG — licensed credit bureau data
+        volume: Supplementary tradeline data for 1 800 000 observations
+        license: Creditreform commercial data licence (annual)
+
+    validation_sources:
+      - name: Out-of-time validation cohort — H2 2024
+        origin: Withheld from training; most recent 6 months
+        volume: 280 000 observations
+        license: Internal; same DSAs as training data
+
+    bias_analysis:
+      - attribute: "Gender: female applicants"
+        population_share: "46.8%"
+        reference_share: "50.3% (ECB Household Finance Survey)"
+        delta: "-3.5 pp"
+        action_taken: >
+          Gender removed from feature set. Gender-correlated employment sector codes
+          removed (correlation r=0.41). Residual delta attributable to legitimate
+          financial profile differences; accepted by Ethics Board.
+      - attribute: "Age: under 25"
+        population_share: "8.2%"
+        reference_share: "12.1% (ECB HFS)"
+        delta: "-3.9 pp (higher decline rates)"
+        action_taken: >
+          Inherent to credit history length. Deployers advised to offer alternative
+          products. Reject inference applied to reduce feedback loop bias.
+
+    special_category_data: >
+      No special category data processed. Health, religion, political opinions
+      explicitly excluded and blocked at the API input layer.
+
+monitoring_functioning_control:
+  capabilities_and_limitations: >
+    Validated for retail credit in DE, NL, FR, BE, AT. NOT for: commercial credit,
+    SME lending, investment products, applicants with < 6 months credit history,
+    or member states outside validated scope. Not the sole basis for credit decisions.
+
+  foreseeable_unintended_outcomes: >
+    (1) Over-reliance by loan officers on score without reading contributing factors.
+    (2) Structural disadvantage for young applicants lacking credit history.
+    (3) Temporal drift under macroeconomic regime change (post-2025 conditions).
+    (4) Feedback loops: declined applicants cannot build credit history.
+
+  human_oversight_measures: >
+    (1) Loan officer sign-off required for all decisions above €500; automated
+    approval/rejection technically blocked. (2) GDPR Art. 22 right to human review
+    implemented with automated disclosure letter. (3) Top-5 contributing factors
+    displayed to loan officer. (4) Override rate monitored monthly.
+
+  accuracy_metrics:
+    - name: AUC-ROC (12-month default)
+      aggregate_value: "0.847"
+      confidence_interval: "[0.841, 0.853] at 95% CI"
+      methodology_note: >
+        Out-of-time validation cohort H2 2024 (280 000 obs). Bootstrap CI 1000 samples.
+      subpopulation_breakdown:
+        - subpopulation: "Product: personal loan"
+          value: "0.861"
+          delta_vs_aggregate: "+0.014"
+        - subpopulation: "Product: credit card"
+          value: "0.843"
+          delta_vs_aggregate: "-0.004"
+        - subpopulation: "Product: mortgage"
+          value: "0.829"
+          delta_vs_aggregate: "-0.018"
+        - subpopulation: "Gender: female"
+          value: "0.841"
+          delta_vs_aggregate: "-0.006"
+        - subpopulation: "Age: under 25"
+          value: "0.798"
+          delta_vs_aggregate: "-0.049"
+
+  robustness_issues:
+    - id: ROB-001
+      category: Temporal drift — post-2025 macroeconomic shift
+      severity: Medium
+      status: Monitored
+      rationale: >
+        PSI increasing in Q1 2026; within alert threshold but trending upward.
+        Retrain planned Q2 2026 with 2023–2025 data.
+
+  cybersecurity_measures: >
+    ISO 27001-certified environment. mTLS API authentication. AES-256 encryption
+    at rest; TLS 1.3 in transit. Air-gapped model registry. Annual pen testing.
+    GDPR DPIA completed and filed with DPA Netherlands.
+
+risk_management:
+  process_description: >
+    Bi-annual review by Model Risk Management Committee (CRO, AI Ethics Officer,
+    CCO, external validator). Aligned with EBA GL/2017/11.
+    All changes require pre-deployment validation and committee sign-off.
+
+  identified_risks:
+    - risk: Disparate impact on under-25 applicants — structurally lower scores
+      likelihood: High
+      impact: Medium
+      mitigation: >
+        Disclosed as known limitation. Deployers required to offer alternative
+        products. Reject inference reduces feedback loop bias.
+      residual_risk: Inherent; accepted with disclosure controls.
+      accepted_by: Model Risk Management Committee, 2026-01-15
+
+    - risk: Temporal drift — macroeconomic regime change
+      likelihood: Medium
+      impact: High
+      mitigation: >
+        Monthly PSI monitoring; retrain at PSI > 0.25. Q2 2026 retrain scheduled.
+      residual_risk: Medium; actively monitored.
+      accepted_by: Model Risk Management Committee, 2026-01-15
+
+    - risk: GDPR Art. 22 — applicant right to human review not implemented
+      likelihood: Low
+      impact: High
+      mitigation: >
+        Technical controls force loan officer review for amounts > €500.
+        GDPR Art. 22 disclosure in automated notice. DPO-confirmed 2026-01-10.
+      residual_risk: Low.
+      accepted_by: Chief Compliance Officer, 2026-01-15
+
+lifecycle_changes:
+  previous_version: 2.0.0
+  substantiality_assessment: >
+    v2.0.0 → v2.1.0: Non-substantial. Data refresh and hyperparameter optimisation
+    only; no architecture, feature set, or intended purpose change.
+    Confirmed by external validator 2026-01-28.
+  changes:
+    - field: development_process.data_governance.training_sources
+      change_description: Added H2 2024 data cohort; removed pre-2021 data.
+      trigger: Scheduled annual data refresh
+      approved_by: Model Risk Management Committee
+      is_substantial: false
+
+harmonised_standards:
+  - standard: ISO/IEC 42001:2023 — AI Management System
+    clause: "Clause 8, Clause 9"
+    conformance: Certification in progress — audit Q3 2026
+    evidence: evidence/iso42001_audit_plan.pdf
+  - standard: EBA GL/2017/11 — Internal Model Governance
+    clause: Full scope
+    conformance: Applied — external validation completed 2026-01-28
+    evidence: evidence/external_validation_report_v2.1.pdf
+
+eu_declaration_of_conformity:
+  declaration_reference: DOC-FA-2026-CS-001
+  declaration_date: "2026-02-01"
+  notified_body_required: false
+  notified_body_name: null
+  notified_body_certificate: null
+  notes: >
+    Internal control (Annex VI). Notified body not required where harmonised
+    standards applied (Article 43(1), Annex III §5(b) systems).
+
+post_market_monitoring:
+  monitoring_approach: >
+    Monthly AUC-ROC on live-labelled cohort (12-month rolling, n ≈ 15 000/month).
+    Weekly PSI on input features. Quarterly Gini and vintage analysis.
+    Bi-annual full external validation.
+
+  key_performance_indicators:
+    - "AUC-ROC ≥ 0.82 (aggregate) — monthly"
+    - "AUC-ROC ≥ 0.79 (per product) — monthly"
+    - "PSI < 0.20 (weekly alert) / < 0.25 (mandatory review trigger)"
+    - "Gini ≥ 0.62 — quarterly"
+    - "Fairness delta (gender) ≤ ±6 pp — quarterly"
+
+  drift_detection_method: >
+    PSI on 20 most predictive features, weekly. Monthly characteristic analysis reports.
+
+  update_trigger_thresholds: >
+    PSI > 0.25 → immediate model review. AUC drop > 0.03 from baseline → emergency retrain.
+
+  responsible_person: Sophie Müller, AI Ethics Officer (s.muller@finai-solutions.eu)
+  review_frequency: Monthly dashboard; bi-annual full validation
+
+serious_incidents: []
+
+evidence_index:
+  - id: EV-001
+    type: Data Sharing Agreement register v2.1
+    uri: evidence/dsa_register_v2.1.pdf
+    used_in_sections: ["Section 2"]
+  - id: EV-002
+    type: External model validation report v2.1
+    uri: evidence/external_validation_report_v2.1.pdf
+    used_in_sections: ["Section 3", "Section 6"]
+  - id: EV-003
+    type: GDPR DPIA — CreditSense Pro
+    uri: evidence/dpia_creditsense_v2.1.pdf
+    used_in_sections: ["Section 3", "Section 4"]
+  - id: EV-004
+    type: MRMC minutes 2026-01-15
+    uri: evidence/mrmc_minutes_2026_01_15.pdf
+    used_in_sections: ["Section 4"]

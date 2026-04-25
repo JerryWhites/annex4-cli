@@ -1,0 +1,410 @@
+# Decision tree for the risk classifier
+# Source: Articles 5, 6, 26, 50, 53 and Annex III of Regulation (EU) 2024/1689
+
+start_node: "is_provider_or_deployer"
+
+tree:
+  is_provider_or_deployer:
+    question: "Are you the 'provider' (developing the AI system) or the 'deployer' (using it under your authority)?"
+    type: "choice"
+    options:
+      - label: "Provider"
+        next_node: "is_prohibited"
+      - label: "Deployer"
+        next_node: "verdict_deployer_redirect"
+
+  is_prohibited:
+    question: "Does your AI system engage in any of the following practices prohibited by Article 5?"
+    type: "multiple_choice"
+    options:
+      - label: "Subliminal manipulation causing harm"
+      - label: "Exploiting vulnerabilities of specific groups causing harm"
+      - label: "Social scoring by public authorities"
+      - label: "Real-time remote biometric identification in public spaces by law enforcement (with narrow exceptions)"
+      - label: "None of the above"
+    next_node_logic:
+      - if:
+          - "None of the above"
+        is_not_selected: "is_prohibited"
+        then: "verdict_prohibited"
+      - else: "is_safety_component_art6"
+
+  is_safety_component_art6:
+    question: "Is the AI system a safety component of a product (or the product itself) covered by specific EU legislation (e.g., medical devices, toys, machinery) and requires a third-party conformity assessment under that legislation?"
+    type: "choice"
+    options:
+      - label: "Yes"
+        next_node: "verdict_high_risk_art6"
+      - label: "No"
+        next_node: "is_annex_iii"
+
+  is_annex_iii:
+    question: "Does the AI system fall into any of the high-risk categories listed in Annex III?"
+    type: "choice"
+    options:
+      - label: "Yes, it's in one of the listed areas (e.g., HR, credit scoring, critical infrastructure)."
+        next_node: "ask_annex_iii_category"
+      - label: "No"
+        next_node: "is_gpai"
+
+  ask_annex_iii_category:
+    question: "Which Annex III category best describes your system?"
+    type: "choice"
+    options:
+      - label: "§1 Biometrics"
+        next_node: "verdict_high_risk_annex_iii_1"
+      - label: "§2 Critical Infrastructure"
+        next_node: "verdict_high_risk_annex_iii_2"
+      - label: "§3 Education"
+        next_node: "verdict_high_risk_annex_iii_3"
+      - label: "§4 Employment"
+        next_node: "verdict_high_risk_annex_iii_4"
+      - label: "§5 Essential Services"
+        next_node: "verdict_high_risk_annex_iii_5"
+      - label: "§6 Law Enforcement"
+        next_node: "verdict_high_risk_annex_iii_6"
+      - label: "§7 Migration/Border Control"
+        next_node: "verdict_high_risk_annex_iii_7"
+      - label: "§8 Justice/Democratic Processes"
+        next_node: "verdict_high_risk_annex_iii_8"
+
+  is_gpai:
+    question: "Is the system a 'general-purpose AI model' (GPAI) under Article 53, exhibiting significant generality and capable of performing a wide range of distinct tasks?"
+    type: "choice"
+    options:
+      - label: "Yes"
+        next_node: "verdict_gpai"
+      - label: "No"
+        next_node: "is_limited_risk"
+
+  is_limited_risk:
+    question: "Does the AI system interact directly with humans, generate deep fakes, or produce text for informational purposes without human review?"
+    type: "choice"
+    options:
+      - label: "Yes"
+        next_node: "verdict_limited_risk"
+      - label: "No"
+        next_node: "verdict_minimal_risk"
+
+verdicts:
+  verdict_prohibited:
+    verdict: "PROHIBITED"
+    path_id: "prohibited_article_5"
+    citation: "Article 5"
+    articles:
+      - "Article 5"
+    conformity_route: "not_applicable"
+    explanation_markdown: |
+      The described practice is **prohibited under Article 5** of the EU AI Act.
+      Such systems cannot be placed on the EU market or put into service.
+    next_steps: |
+      Cease development for the EU market immediately.
+      Consult qualified legal counsel on your obligations and liability.
+    notified_body_assessment_likely: false
+
+  verdict_high_risk_art6:
+    verdict: "HIGH_RISK_ARTICLE_6_1"
+    path_id: "high_risk_article_6_1_safety_component"
+    citation: "Article 6(1)"
+    articles:
+      - "Article 6(1)"
+      - "Annex I (relevant EU product legislation)"
+      - "Annex VII (conformity assessment)"
+    conformity_route: "notified_body_annex_vii"
+    explanation_markdown: |
+      Your system is classified as **high-risk under Article 6(1)** — it is a safety component
+      of a product covered by existing EU harmonisation legislation (Annex I).
+
+      **Conformity assessment route:** Third-party assessment by a **Notified Body** (Annex VII)
+      is required because the underlying product legislation already mandates it.
+
+      **Important:** This tool helps you prepare Annex IV technical documentation.
+      It does not perform or substitute for the Notified Body assessment.
+    next_steps: |
+      1. Identify the applicable Notified Body for your product sector.
+      2. Run `annex4 init --output dossier.yaml` to create your documentation template.
+      3. Prepare your full Annex IV technical documentation.
+      4. Engage the Notified Body for conformity assessment.
+      Seek legal review of this classification before any regulatory filing.
+    notified_body_assessment_likely: true
+
+  verdict_high_risk_annex_iii_1:
+    verdict: "HIGH_RISK_ANNEX_III_§1"
+    path_id: "high_risk_annex_iii_1_biometrics_article_6_2"
+    citation: "Annex III §1, Article 6(2)"
+    articles:
+      - "Article 6(2)"
+      - "Annex III §1 (Biometrics)"
+      - "Annex VII (notified body where harmonised standards not applied)"
+    conformity_route: "notified_body_annex_vii"
+    explanation_markdown: |
+      Your system is classified as **high-risk under Annex III §1** — Biometrics.
+
+      **Basis:** Article 6(2). Biometric systems are listed as high-risk in Annex III §1.
+
+      **Conformity assessment route:** Notified Body assessment is typically required
+      for biometric systems (Article 43(1) — Annex III §1 biometrics are specifically listed).
+    next_steps: |
+      1. Run `annex4 init --output dossier.yaml`.
+      2. Complete all Annex IV sections.
+      3. Engage a Notified Body before placing the system on the market.
+      Seek legal review of this classification.
+    notified_body_assessment_likely: true
+
+  verdict_high_risk_annex_iii_2:
+    verdict: "HIGH_RISK_ANNEX_III_§2"
+    path_id: "high_risk_annex_iii_2_critical_infra_article_6_2"
+    citation: "Annex III §2, Article 6(2)"
+    articles:
+      - "Article 6(2)"
+      - "Annex III §2 (Critical Infrastructure)"
+      - "Annex VI (internal control)"
+    conformity_route: "internal_control_annex_vi"
+    explanation_markdown: |
+      Your system is classified as **high-risk under Annex III §2** — Critical Infrastructure.
+
+      **Basis:** Article 6(2). **Conformity route:** Internal control under Annex VI.
+      A Notified Body is not required by default.
+    next_steps: |
+      1. Run `annex4 init --output dossier.yaml`.
+      2. Complete all Annex IV sections.
+      3. Conduct internal conformity assessment under Annex VI.
+      Seek legal review of this classification.
+    notified_body_assessment_likely: false
+
+  verdict_high_risk_annex_iii_3:
+    verdict: "HIGH_RISK_ANNEX_III_§3"
+    path_id: "high_risk_annex_iii_3_education_article_6_2"
+    citation: "Annex III §3, Article 6(2)"
+    articles:
+      - "Article 6(2)"
+      - "Annex III §3 (Education and vocational training)"
+      - "Annex VI (internal control)"
+    conformity_route: "internal_control_annex_vi"
+    explanation_markdown: |
+      Your system is classified as **high-risk under Annex III §3** — Education and vocational training.
+
+      **Basis:** Article 6(2). **Conformity route:** Internal control under Annex VI.
+    next_steps: |
+      1. Run `annex4 init --output dossier.yaml`.
+      2. Complete all Annex IV sections and conduct internal conformity assessment.
+      Seek legal review of this classification.
+    notified_body_assessment_likely: false
+
+  verdict_high_risk_annex_iii_4:
+    verdict: "HIGH_RISK_ANNEX_III_§4"
+    path_id: "annex_iii_4a_employment_article_6_2_internal_control_annex_vi"
+    citation: "Annex III §4(a), Article 6(2), Annex VI"
+    articles:
+      - "Article 6(2)"
+      - "Annex III §4(a) — Employment, workers management and access to self-employment"
+      - "Annex VI (internal control conformity route)"
+      - "Article 49 (EU database registration)"
+    conformity_route: "internal_control_annex_vi"
+    explanation_markdown: |
+      Your system is classified as **high-risk under Annex III §4(a)** —
+      Employment, workers management and access to self-employment.
+
+      **Basis:** Article 6(2). This applies because the system is used for recruitment,
+      selection, screening, or management of persons affecting access to employment.
+
+      **Conformity assessment route:** **Internal control under Annex VI.**
+      A Notified Body is **not required by default**, provided you apply harmonised standards
+      (Article 43(1)). If you choose not to apply harmonised standards, Annex VII (Notified Body)
+      applies — seek legal guidance on this choice.
+
+      **Registration:** Required in the EU AI database under **Article 49**
+      before placing the system on the market or putting it into service.
+
+      **Fundamental Rights Impact Assessment (FRIA):** Not required for Providers.
+      FRIA under Article 27 is the **Deployer's** obligation, not the Provider's.
+    next_steps: |
+      1. Run `annex4 init --output dossier.yaml` to create your Annex IV documentation template.
+      2. Fill in dossier.yaml (all 9 sections of Annex IV).
+      3. Run `annex4 validate dossier.yaml` to check completeness.
+      4. Run `annex4 render dossier.yaml --format pdf` to generate your dossier.
+      5. Conduct internal conformity assessment (Annex VI procedure).
+      6. Register your system in the EU AI database (Article 49) before market placement.
+      7. Seek legal review of this classification before any regulatory filing.
+    notified_body_assessment_likely: false
+
+  verdict_high_risk_annex_iii_5:
+    verdict: "HIGH_RISK_ANNEX_III_§5"
+    path_id: "high_risk_annex_iii_5_essential_services_article_6_2"
+    citation: "Annex III §5, Article 6(2)"
+    articles:
+      - "Article 6(2)"
+      - "Annex III §5 (Access to essential private and public services)"
+      - "Annex VI (internal control)"
+    conformity_route: "internal_control_annex_vi"
+    explanation_markdown: |
+      Your system is classified as **high-risk under Annex III §5** —
+      Access to essential private and public services (including credit scoring).
+
+      **Basis:** Article 6(2). **Conformity route:** Internal control under Annex VI.
+    next_steps: |
+      1. Run `annex4 init --output dossier.yaml` and complete all Annex IV sections.
+      2. Conduct internal conformity assessment under Annex VI.
+      3. Register in the EU AI database (Article 49).
+      Seek legal review of this classification.
+    notified_body_assessment_likely: false
+
+  verdict_high_risk_annex_iii_6:
+    verdict: "HIGH_RISK_ANNEX_III_§6"
+    path_id: "high_risk_annex_iii_6_law_enforcement_article_6_2"
+    citation: "Annex III §6, Article 6(2)"
+    articles:
+      - "Article 6(2)"
+      - "Annex III §6 (Law enforcement)"
+      - "Annex VII (notified body where harmonised standards not applied)"
+    conformity_route: "notified_body_annex_vii"
+    explanation_markdown: |
+      Your system is classified as **high-risk under Annex III §6** — Law enforcement.
+
+      **Basis:** Article 6(2). Law enforcement systems are subject to heightened scrutiny.
+      Notified Body assessment is typically required.
+    next_steps: |
+      Complete Annex IV documentation and engage a Notified Body.
+      Seek legal review — law enforcement AI has specific procedural requirements.
+    notified_body_assessment_likely: true
+
+  verdict_high_risk_annex_iii_7:
+    verdict: "HIGH_RISK_ANNEX_III_§7"
+    path_id: "high_risk_annex_iii_7_migration_article_6_2"
+    citation: "Annex III §7, Article 6(2)"
+    articles:
+      - "Article 6(2)"
+      - "Annex III §7 (Migration, asylum and border control management)"
+      - "Annex VII (notified body where harmonised standards not applied)"
+    conformity_route: "notified_body_annex_vii"
+    explanation_markdown: |
+      Your system is classified as **high-risk under Annex III §7** —
+      Migration, asylum and border control management.
+
+      **Basis:** Article 6(2). Notified Body assessment is typically required.
+    next_steps: |
+      Complete Annex IV documentation and engage a Notified Body.
+      Seek legal review — migration AI has specific fundamental rights implications.
+    notified_body_assessment_likely: true
+
+  verdict_high_risk_annex_iii_8:
+    verdict: "HIGH_RISK_ANNEX_III_§8"
+    path_id: "high_risk_annex_iii_8_justice_article_6_2"
+    citation: "Annex III §8, Article 6(2)"
+    articles:
+      - "Article 6(2)"
+      - "Annex III §8 (Administration of justice and democratic processes)"
+      - "Annex VII (notified body where harmonised standards not applied)"
+    conformity_route: "notified_body_annex_vii"
+    explanation_markdown: |
+      Your system is classified as **high-risk under Annex III §8** —
+      Administration of justice and democratic processes.
+
+      **Basis:** Article 6(2). Notified Body assessment is typically required.
+    next_steps: |
+      Complete Annex IV documentation and engage a Notified Body.
+      Seek legal review — justice and democratic systems require heightened scrutiny.
+    notified_body_assessment_likely: true
+
+  verdict_gpai:
+    verdict: "GPAI_MODEL"
+    path_id: "gpai_article_53_redirect"
+    citation: "Article 53"
+    articles:
+      - "Article 53"
+      - "Title VIII (General-Purpose AI Models)"
+    conformity_route: "gpai_specific_obligations"
+    explanation_markdown: |
+      Your system appears to be a **General-Purpose AI (GPAI) model** under Article 53.
+
+      GPAI models have a distinct obligation set under Title VIII — different from the
+      Annex IV technical documentation requirements for high-risk AI systems.
+
+      **This tool is designed for Providers of high-risk AI systems and does not
+      currently support the GPAI model regime.** GPAI obligations include:
+      - Technical documentation (Article 53(1)(a)) — different structure from Annex IV
+      - Model evaluation, adversarial testing (Article 55 for systemic-risk models)
+      - Copyright transparency obligations (Article 53(1)(d))
+    next_steps: |
+      Review Title VIII of the EU AI Act and consult qualified legal counsel
+      specialising in GPAI obligations.
+      This tool will not generate compliant documentation for your system.
+    notified_body_assessment_likely: false
+
+  verdict_limited_risk:
+    verdict: "LIMITED_RISK"
+    path_id: "limited_risk_article_50"
+    citation: "Article 50"
+    articles:
+      - "Article 50 (Transparency obligations)"
+    conformity_route: "transparency_obligations_only"
+    explanation_markdown: |
+      Your system appears to be **limited risk** under the EU AI Act.
+
+      **Annex IV technical documentation is not required.**
+      However, specific transparency obligations apply under Article 50:
+      - Notify users they are interacting with an AI (chatbots, Article 50(1))
+      - Label AI-generated content / deep fakes (Article 50(2)–(4))
+      - Disclose that content is AI-generated for informational texts (Article 50(3))
+    next_steps: |
+      Review Article 50 carefully to confirm all applicable transparency obligations.
+      No Annex IV documentation required. No Notified Body assessment required.
+      Voluntary codes of conduct under Article 95 may apply.
+    notified_body_assessment_likely: false
+
+  verdict_minimal_risk:
+    verdict: "MINIMAL_RISK"
+    path_id: "minimal_risk_recital_33"
+    citation: "Recital 33"
+    articles:
+      - "Recital 33"
+      - "Article 95 (voluntary codes of conduct)"
+    conformity_route: "not_applicable"
+    explanation_markdown: |
+      Your system appears to be **minimal risk** under the EU AI Act.
+
+      The AI Act imposes **no mandatory obligations** on minimal-risk AI systems.
+      The vast majority of AI systems fall into this category.
+
+      Voluntary codes of conduct under Article 95 may be worth considering
+      as a signal of good-faith compliance culture.
+    next_steps: |
+      No mandatory obligations under the EU AI Act apply.
+      Review Article 95 for voluntary measures.
+      No Annex IV documentation required.
+    notified_body_assessment_likely: false
+
+  verdict_deployer_redirect:
+    verdict: "DEPLOYER_REDIRECT"
+    path_id: "deployer_article_26_redirect"
+    citation: "Article 26"
+    articles:
+      - "Article 26 (Obligations of deployers of high-risk AI systems)"
+    conformity_route: "not_applicable"
+    explanation_markdown: |
+      As a **deployer** of an AI system, your obligations are defined in Article 26.
+      These differ significantly from provider obligations.
+
+      **This tool is designed for AI system Providers** (those who develop and place
+      the system on the market). It does not generate Annex IV documentation for deployers.
+
+      Deployer key obligations (Article 26): use in accordance with instructions,
+      human oversight, data quality for your use case, transparency to affected persons.
+    next_steps: |
+      Review Article 26 for your obligations as a deployer.
+      Obtain the provider's Annex IV technical documentation for the system you deploy.
+      This tool will not generate compliant documentation for your role.
+    notified_body_assessment_likely: false
+
+  verdict_uncertain:
+    verdict: "UNCERTAIN"
+    path_id: "uncertain_boundary_case"
+    citation: "N/A"
+    articles: []
+    conformity_route: "legal_review_required"
+    explanation_markdown: |
+      Based on the answers provided, the classification is **ambiguous**.
+      This often occurs at the boundaries of definitions in the EU AI Act.
+    next_steps: |
+      Consult qualified legal counsel. Do not self-certify in boundary cases.
+    notified_body_assessment_likely: false

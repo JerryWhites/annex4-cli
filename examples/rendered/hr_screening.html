@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Informational tool output; not legal advice.">
+  <meta name="generator" content="annex4-cli">
+  <title>TalentFlow ScreenAI v1.2.0 Annex IV Technical Documentation — annex4-cli draft, not legal advice</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: Georgia, "Times New Roman", serif; font-size: 14px; line-height: 1.7;
+           color: #1a1a1a; max-width: 1000px; margin: 0 auto; padding: 2.5rem 2rem; }
+    h1 { font-size: 1.7rem; border-bottom: 3px solid #003399; padding-bottom: 0.4rem; margin-bottom: 0.3rem; }
+    h2 { font-size: 1.25rem; border-bottom: 1px solid #003399; color: #003399;
+         margin-top: 2.5rem; padding-bottom: 0.2rem; }
+    h3 { font-size: 1rem; margin-top: 1.4rem; margin-bottom: 0.3rem; color: #333; }
+    table { width: 100%; border-collapse: collapse; margin: 0.8rem 0 1.2rem; font-size: 13px; }
+    th { background: #003399; color: #fff; padding: 0.4rem 0.6rem; text-align: left; font-weight: bold; }
+    td { padding: 0.4rem 0.6rem; border-bottom: 1px solid #dde; vertical-align: top; }
+    tr:nth-child(even) td { background: #f4f6fb; }
+    .meta-table td:first-child { font-weight: bold; width: 40%; color: #444; }
+    .disclaimer { background: #fffbe6; border-left: 4px solid #e0b800; padding: 0.8rem 1rem;
+                  margin: 1.2rem 0; font-size: 13px; }
+    .toc { background: #f0f4ff; border: 1px solid #c0cff0; border-radius: 4px;
+           padding: 1rem 1.5rem; margin-bottom: 2rem; }
+    .toc ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+    .toc li { margin: 0.2rem 0; }
+    .toc a { color: #003399; text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+    .cite { font-size: 11px; color: #666; font-style: italic; margin-left: 0.5rem; }
+    .badge-high { color: #cc0000; font-weight: bold; }
+    .badge-medium { color: #e07000; font-weight: bold; }
+    .badge-open { color: #cc0000; }
+    .badge-closed { color: #008800; }
+    .empty { color: #999; font-style: italic; }
+    .footer { margin-top: 3rem; border-top: 1px solid #ccc; padding-top: 0.8rem;
+              font-size: 11px; color: #888; text-align: center; }
+    @media print { body { max-width: 100%; padding: 1rem; } h2 { page-break-before: always; } }
+    @page { margin: 2cm; @bottom-center { content: "annex4-cli draft, not legal advice — " attr(data-reg-version); font-size: 9px; color: #888; } }
+  </style>
+</head>
+<body>
+
+
+<h1>Annex IV Technical Documentation</h1>
+<p>
+  <strong>TalentFlow ScreenAI</strong> &mdash; v1.2.0<br>
+  <span class="cite">Regulation (EU) 2024/1689 &bull; Annex IV</span>
+</p>
+
+<div class="disclaimer">
+  <strong>Scope.</strong> This technical documentation is produced to support compliance with
+  Article&nbsp;11 and Annex&nbsp;IV of Regulation&nbsp;(EU)&nbsp;2024/1689. It does not
+  constitute a conformity assessment. This document is informational and is not legal advice.
+</div>
+
+<div class="toc">
+  <strong>Table of Contents</strong>
+  <ol>
+    <li><a href="#s1">General description of the AI system</a></li>
+    <li><a href="#s2">Detailed description of elements and development process</a></li>
+    <li><a href="#s3">Monitoring, functioning and control</a></li>
+    <li><a href="#s4">Risk management system (Article 9)</a></li>
+    <li><a href="#s5">Lifecycle changes</a></li>
+    <li><a href="#s6">Harmonised standards applied</a></li>
+    <li><a href="#s7">EU declaration of conformity</a></li>
+    <li><a href="#s8">Post-market monitoring plan (Article 72)</a></li>
+    <li><a href="#s9">Serious incidents log (Article 73)</a></li>
+    <li><a href="#sa">Appendix A &mdash; Evidence index</a></li>
+  </ol>
+</div>
+
+<!-- ═══════════════════════════ Section 1 ═══════════════════════════ -->
+<h2 id="s1">1. General description of the AI system <span class="cite">Annex IV §1</span></h2>
+
+<h3>1.1 Provider</h3>
+<table class="meta-table">
+  <tr><td>Provider name</td><td>TalentFlow AI GmbH</td></tr>
+  <tr><td>Registration number</td><td>HRB 242301 B (Amtsgericht Charlottenburg)</td></tr>
+  <tr><td>Registered address</td><td>Unter den Linden 42, 10117 Berlin, Germany</td></tr>
+  <tr><td>Market surveillance contact</td><td>ai-compliance@talentflow-ai.de</td></tr>
+  <tr><td>Authorised signatory</td><td>Dr. Erika Muster, Chief Executive Officer</td></tr>
+  <tr><td>AI Governance owner</td><td>Jan Kovář, Head of AI Governance</td></tr>
+  <tr><td>EU representative</td><td>TalentFlow AI GmbH (established in the Union)</td></tr>
+</table>
+
+<h3>1.2 System identity</h3>
+<table class="meta-table">
+  <tr><td>System name</td><td>TalentFlow ScreenAI</td></tr>
+  <tr><td>Version</td><td>1.2.0</td></tr>
+  <tr><td>Git commit</td><td>a3f9c12d</td></tr>
+  <tr><td>Release date</td><td>2026-03-15</td></tr>
+  <tr><td>Risk classification</td><td>High-risk — Annex III §4(a), Article 6(2)</td></tr>
+  <tr><td>Annex III category</td><td>Employment, workers management and access to self-employment — Annex III §4(a)</td></tr>
+  <tr><td>Regulation version</td><td>2024-1689_base</td></tr>
+</table>
+
+<h3>1.3 Intended purpose</h3>
+<table class="meta-table">
+  <tr><td>Description</td><td>TalentFlow ScreenAI automatically screens, ranks, and shortlists job applications for white-collar and technical positions. The system analyses structured applicant data (CV text, application form fields) and produces a ranked shortlist with explanatory score breakdowns for each candidate. The system is designed to assist — not replace — human recruiters in the initial screening phase.
+</td></tr>
+  <tr><td>Intended users</td><td>HR professionals and recruitment specialists at partner organisations who use TalentFlow ScreenAI as an assistive tool for initial candidate screening. All system outputs require human review before any employment decision is made.
+</td></tr>
+  <tr><td>Deployment form</td><td>SaaS — accessed via web dashboard and REST API</td></tr>
+  <tr><td>Geographic scope</td><td>European Union; not validated for use outside EU member states</td></tr>
+  <tr><td>Persons affected</td><td>Natural persons who submit job applications to organisations using TalentFlow ScreenAI. Applicants are notified of AI-assisted screening in the job posting and application form.
+</td></tr>
+</table>
+
+<h3>1.4 Foreseeable misuse</h3>
+<ul>
+<li>Automated rejection without human review of individual candidates</li><li>Use as the sole basis for employment decisions without recruiter oversight</li><li>Screening on characteristics not listed in the approved feature set</li><li>Deployment in jurisdictions outside the validated geographic scope</li></ul>
+
+<!-- ═══════════════════════════ Section 2 ═══════════════════════════ -->
+<h2 id="s2">2. Development process <span class="cite">Annex IV §2</span></h2>
+
+<table class="meta-table">
+  <tr><td>Methodology</td><td>Supervised learning using gradient-boosted trees (XGBoost 2.0) trained on six years of historical recruitment data. Feature engineering pipeline extracts structured signals from free-text CV fields via a fine-tuned sentence-transformer (multilingual MiniLM-L12) frozen at inference time. Model selection via 5-fold cross-validation with stratified splits. Final model selected on balanced accuracy across gender subgroups.
+</td></tr>
+  <tr><td>Architecture</td><td>Two-stage pipeline: (1) NLP feature extractor (sentence-transformer, 768-dim embeddings, CPU inference) → (2) XGBoost classifier (500 estimators, max_depth=6, learning_rate=0.05). Output: a continuous score [0, 1] representing screening probability, plus SHAP feature importance breakdown for each prediction. No generative AI components. No real-time learning.
+</td></tr>
+  <tr><td>Inputs</td><td>Structured applicant record containing: CV text (free-form, up to 5 000 tokens), application form fields (role applied for, years of experience, highest qualification), and optionally a cover letter. All personal identifiers (name, address, contact details, date of birth) are stripped before the record reaches the model via a PII-removal preprocessor.
+</td></tr>
+  <tr><td>Outputs</td><td>A ranked shortlist of candidates with: screening score [0–100], SHAP feature breakdown (top-5 contributing features per candidate), and a plain-language summary of the main factors. The shortlist is delivered to the recruiter dashboard. No direct communication with applicants.
+</td></tr>
+  <tr><td>Pre-trained components</td><td>multilingual-MiniLM-L12-v2 (sentence-transformers, Apache-2.0 licence). Weights frozen; not fine-tuned on TalentFlow data. Used solely for embedding generation.
+</td></tr>
+  <tr><td>Design choices rationale</td><td>Tree-based model chosen over deep learning to maximise interpretability (SHAP explanations are exact, not approximate) and to avoid hallucination risks of generative models in a high-stakes screening context.
+</td></tr>
+</table>
+
+<h3>2.1 Training data sources</h3>
+<table>
+  <tr><th>Name</th><th>Origin</th><th>Volume</th><th>Licence</th></tr>
+  <tr>
+    <td>TalentFlow Historical Recruitment Dataset (EU)</td>
+    <td>Anonymised recruitment outcomes from 47 partner organisations, 2018–2024</td>
+    <td>1 240 000 application records; 186 000 positive outcomes</td>
+    <td>Internal use only — data processing agreements in place with each partner</td>
+  </tr>
+  <tr>
+    <td>ESCO Occupational Skills Taxonomy v1.1</td>
+    <td>European Commission, ESCO dataset (public)</td>
+    <td>13 890 skill labels used for feature normalisation</td>
+    <td>CC BY 4.0</td>
+  </tr>
+</table>
+
+<h3>2.2 Bias analysis</h3>
+<table>
+  <tr><th>Attribute</th><th>Population share</th><th>Reference share</th><th>Delta</th><th>Action taken</th></tr>
+  <tr>
+    <td>Gender: female applicants</td>
+    <td>48.2%</td>
+    <td>51.0% (Eurostat workforce)</td>
+    <td>-2.8 pp below parity</td>
+    <td>Fairness-aware re-weighting applied during training (equalized odds constraint). Post-mitigation delta reduced from −9.1 pp to −2.8 pp. Residual gap accepted by AI Governance Committee 2026-01-20 as within the ±5 pp operational threshold.
+</td>
+  </tr>
+  <tr>
+    <td>Age group: 50+ applicants</td>
+    <td>14.6%</td>
+    <td>18.3% (Eurostat active population)</td>
+    <td>-3.7 pp below parity</td>
+    <td>Age-proxy features (graduation year in CV) removed from feature set. Post-mitigation delta: −3.7 pp. Under continued monitoring; corrective action scheduled for v1.3 if delta persists above −3 pp at Q3 2026 review.
+</td>
+  </tr>
+</table>
+
+<!-- ═══════════════════════════ Section 3 ═══════════════════════════ -->
+<h2 id="s3">3. Monitoring, functioning and control <span class="cite">Annex IV §3 / Article 15</span></h2>
+
+<table class="meta-table">
+  <tr><td>Capabilities and limitations</td><td>The system is validated for screening white-collar and technical roles in EU member states. It is NOT validated for: (a) roles requiring security clearance, (b) senior executive positions, (c) applicants from outside the EU without EU educational credentials, (d) roles with fewer than 10 historical hires in the training data. The system does not make employment decisions — it produces an assistive ranked list requiring human review.
+</td></tr>
+  <tr><td>Foreseeable unintended outcomes</td><td>(1) Perpetuation of historical hiring biases embedded in training data despite mitigation measures. (2) Proxy discrimination via non-protected features that correlate with protected characteristics (e.g., institution names as proxies for socioeconomic background). (3) Over-reliance by recruiters on AI score without reading underlying rationale. (4) Gaming by applicants aware of high-scoring CV patterns. (5) Disparate impact on applicants with non-linear career histories (e.g., career breaks for caregiving) which the model has limited training signal for.
+</td></tr>
+  <tr><td>Human oversight measures</td><td>(1) All shortlisted candidates must be reviewed by a qualified recruiter before invitation to interview. Automatic progression is technically blocked. (2) SHAP explanations are displayed alongside every score to support informed human review. (3) Recruiters can override the system ranking at any time with a mandatory rationale field. (4) AI Governance Officer reviews override rates monthly; spikes trigger model review. (5) All deployer staff with access to the dashboard must complete the mandatory AI literacy training module (min. 2 hours) before activation.
+</td></tr>
+  <tr><td>Cybersecurity measures</td><td>All API endpoints authenticated via OAuth 2.0 (client credentials flow). PII removed server-side before model inference (dedicated anonymisation service, pen-tested annually). Model artefacts signed and stored in isolated artifact registry. No model weights exposed via API. SOC 2 Type II audit scheduled Q4 2026.
+</td></tr>
+</table>
+
+<h3>3.1 Accuracy metrics</h3>
+<h4>Balanced Accuracy</h4>
+<table class="meta-table">
+  <tr><td>Aggregate value</td><td>0.86</td></tr>
+  <tr><td>Confidence interval</td><td>[0.84, 0.88] at 95% CI</td></tr>
+  <tr><td>Methodology note</td><td>Evaluated on TalentFlow Holdout 2024 (62 000 records). Balanced accuracy accounts for class imbalance (87% negative, 13% positive rate in holdout).
+</td></tr>
+</table>
+<table>
+  <tr><th>Subpopulation</th><th>N</th><th>Value</th><th>CI</th><th>Δ vs. aggregate</th></tr>
+  <tr>
+    <td>Gender: female</td>
+    <td>—</td>
+    <td>0.84</td>
+    <td>—</td>
+    <td>-0.02</td>
+  </tr>
+  <tr>
+    <td>Gender: male</td>
+    <td>—</td>
+    <td>0.87</td>
+    <td>—</td>
+    <td>+0.01</td>
+  </tr>
+  <tr>
+    <td>Age: 18–34</td>
+    <td>—</td>
+    <td>0.88</td>
+    <td>—</td>
+    <td>+0.02</td>
+  </tr>
+  <tr>
+    <td>Age: 35–49</td>
+    <td>—</td>
+    <td>0.86</td>
+    <td>—</td>
+    <td>0.00</td>
+  </tr>
+  <tr>
+    <td>Age: 50+</td>
+    <td>—</td>
+    <td>0.82</td>
+    <td>—</td>
+    <td>-0.04</td>
+  </tr>
+</table>
+<h4>False Negative Rate (qualified candidates missed)</h4>
+<table class="meta-table">
+  <tr><td>Aggregate value</td><td>0.09</td></tr>
+  <tr><td>Confidence interval</td><td>—</td></tr>
+  <tr><td>Methodology note</td><td>FNR evaluated at operating threshold 0.55. Recruiter review mitigates impact of false negatives through manual review of candidates near the threshold.
+</td></tr>
+</table>
+<table>
+  <tr><th>Subpopulation</th><th>N</th><th>Value</th><th>CI</th><th>Δ vs. aggregate</th></tr>
+  <tr>
+    <td>Gender: female</td>
+    <td>—</td>
+    <td>0.11</td>
+    <td>—</td>
+    <td>+0.02</td>
+  </tr>
+  <tr>
+    <td>Age: 50+</td>
+    <td>—</td>
+    <td>0.14</td>
+    <td>—</td>
+    <td>+0.05</td>
+  </tr>
+</table>
+
+<h3>3.2 Robustness issues</h3>
+<table>
+  <tr><th>ID</th><th>Category</th><th>Severity</th><th>Status</th><th>Rationale</th></tr>
+  <tr>
+    <td>ROB-001</td>
+    <td>Adversarial input — CV keyword stuffing</td>
+    <td class="badge-low">Low</td>
+    <td class="badge-accepted">Accepted</td>
+    <td>Applicants may inflate CV text with high-scoring keywords. SHAP explanations make this detectable by the reviewing recruiter. No automated countermeasure implemented; accepted as residual risk. Monitoring: flagging logic planned for v1.3.
+</td>
+  </tr>
+</table>
+
+<!-- ═══════════════════════════ Section 4 ═══════════════════════════ -->
+<h2 id="s4">4. Risk management system <span class="cite">Article 9</span></h2>
+
+<table class="meta-table">
+  <tr><td>Process description</td><td>Quarterly risk review conducted by the AI Governance Committee (CTO, Head of AI Governance, Legal Counsel, DPO). Risk register maintained in the internal JIRA project AIGRISK. Each identified risk is assessed for likelihood and impact, assigned a mitigation owner, and tracked to resolution or formal acceptance. Unresolved HIGH risks block new model releases.
+</td></tr>
+  <tr><td>Residual risk acceptance</td><td>All residual risks have been formally accepted by the AI Governance Committee. Acceptance is conditional on the monitoring programme remaining active and the v1.3 / v1.4 corrective actions being delivered on schedule.
+</td></tr>
+</table>
+
+<table>
+  <tr><th>Risk</th><th>Likelihood</th><th>Impact</th><th>Mitigation</th><th>Residual risk</th><th>Accepted by</th></tr>
+  <tr>
+    <td>Disparate impact on female applicants — screening rate below parity</td>
+    <td>Medium</td>
+    <td>High</td>
+    <td>Equalized-odds re-weighting applied in training. Monthly fairness dashboard monitored by AI Governance Officer. Threshold for corrective action: delta &gt; 5 pp.
+</td>
+    <td>Delta currently −2.8 pp; within accepted ±5 pp threshold.</td>
+    <td>AI Governance Committee, 2026-01-20</td>
+  </tr>
+  <tr>
+    <td>Disparate impact on 50+ applicants — underrepresentation in shortlists</td>
+    <td>Medium</td>
+    <td>High</td>
+    <td>Age-proxy features removed from feature set. Sub-population monitoring in production. Corrective action (targeted retraining) scheduled for v1.3 if delta remains above −3 pp at Q3 2026 evaluation.
+</td>
+    <td>Delta −3.7 pp; elevated monitoring status.</td>
+    <td>AI Governance Committee, 2026-01-20</td>
+  </tr>
+  <tr>
+    <td>Recruiter over-reliance — decisions made without reading SHAP explanations</td>
+    <td>Medium</td>
+    <td>Medium</td>
+    <td>UI design forces mandatory display of top-3 SHAP features before the shortlist can be acted upon. AI literacy training required for all users. Override rate monitored monthly.
+</td>
+    <td>Low; UX controls and training reduce likelihood significantly.</td>
+    <td>Head of Product, 2026-02-05</td>
+  </tr>
+  <tr>
+    <td>Eastern EU sub-population underperformance — insufficient training data</td>
+    <td>High</td>
+    <td>Medium</td>
+    <td>Known limitation disclosed to all deployers in the system documentation. Deployers advised to apply additional human review for affected applicant profiles. Active data collection programme with 3 Eastern EU partner organisations.
+</td>
+    <td>Medium; data gap to be addressed in v1.4 (target Q4 2026).</td>
+    <td>AI Governance Committee, 2026-01-20</td>
+  </tr>
+</table>
+
+<!-- ═══════════════════════════ Section 5 ═══════════════════════════ -->
+<h2 id="s5">5. Lifecycle changes <span class="cite">Article 16(d)</span></h2>
+
+<table class="meta-table">
+  <tr><td>Previous version</td><td>1.1.0</td></tr>
+  <tr><td>Substantiality assessment</td><td>Change from v1.1.0 to v1.2.0 assessed as non-substantial under Article 43(4). No change to intended purpose, training data distribution, or fundamental algorithm design. Accuracy improvement within normal operational variance. Assessment reviewed and confirmed by Legal Counsel 2026-03-10.
+</td></tr>
+</table>
+
+<table>
+  <tr><th>Field</th><th>Change description</th><th>Trigger</th><th>Substantial?</th><th>Approved by</th></tr>
+  <tr>
+    <td>monitoring_functioning_control.accuracy_metrics.aggregate_value</td>
+    <td>Balanced accuracy improved from 0.82 to 0.86 following hyperparameter optimisation.</td>
+    <td>Scheduled Q1 2026 model refresh cycle</td>
+    <td>False</td>
+    <td>Head of AI Governance</td>
+  </tr>
+  <tr>
+    <td>development_process.data_governance.training_sources</td>
+    <td>Added 3 Eastern EU partner organisations to training data pool (62 000 new records).</td>
+    <td>Strategic data partnership agreements signed Q4 2025</td>
+    <td>False</td>
+    <td>AI Governance Committee</td>
+  </tr>
+</table>
+
+<!-- ═══════════════════════════ Section 6 ═══════════════════════════ -->
+<h2 id="s6">6. Harmonised standards <span class="cite">Annex IV §6</span></h2>
+
+<table>
+  <tr><th>Standard</th><th>Clause</th><th>Conformance</th><th>Evidence</th></tr>
+  <tr>
+    <td>ISO/IEC 42001:2023 — AI Management System</td>
+    <td>Clause 6.1 (Risk assessment), Clause 8.4 (AI system lifecycle)</td>
+    <td>Partial — gap analysis completed; full certification targeted Q4 2026</td>
+    <td>evidence/iso42001_gap_analysis.pdf</td>
+  </tr>
+  <tr>
+    <td>ISO/IEC 23894:2023 — AI Risk Management</td>
+    <td>Clause 5 (Risk management principles), Clause 6 (Risk assessment)</td>
+    <td>Applied as guidance framework for Section 4 risk register</td>
+    <td>evidence/risk_register_v1.2.pdf</td>
+  </tr>
+</table>
+
+<!-- ═══════════════════════════ Section 7 ═══════════════════════════ -->
+<h2 id="s7">7. EU declaration of conformity <span class="cite">Annex IV §7 / Article 47</span></h2>
+
+<table class="meta-table">
+  <tr><td>Declaration reference</td><td>DOC-TF-2026-001</td></tr>
+  <tr><td>Declaration date</td><td>2026-03-15</td></tr>
+  <tr><td>Notified body required</td><td>False</td></tr>
+  <tr><td>Notified body name</td><td>—</td></tr>
+  <tr><td>Notified body certificate</td><td>—</td></tr>
+  <tr><td>Notes</td><td>Conformity assessment conducted via internal control procedure (Annex VI). Third-party notified body assessment not required for Annex III §4(a) systems where the provider applies harmonised standards (Article 43(1)).
+</td></tr>
+</table>
+
+<!-- ═══════════════════════════ Section 8 ═══════════════════════════ -->
+<h2 id="s8">8. Post-market monitoring plan <span class="cite">Article 72</span></h2>
+
+<table class="meta-table">
+  <tr><td>Monitoring approach</td><td>Monthly evaluation of balanced accuracy and fairness metrics on a live-labelled holdout sample (rolling 90-day window, n ≈ 8 000 records per month). Drift detection via Population Stability Index (PSI) on top-20 input features. Quarterly review by AI Governance Committee with mandatory corrective action trigger if any KPI breaches its threshold.
+</td></tr>
+  <tr><td>Drift detection method</td><td>Population Stability Index (PSI) computed weekly on the distribution of the top-20 SHAP features. Alert threshold PSI &gt; 0.20; model review triggered at PSI &gt; 0.25.
+</td></tr>
+  <tr><td>Update trigger thresholds</td><td>Any KPI breach sustained over 2 consecutive monthly evaluations triggers mandatory model review. A breach of the fairness KPIs triggers an emergency governance review within 14 days.
+</td></tr>
+  <tr><td>Responsible person</td><td>Jan Kovář, Head of AI Governance (jan.kovar@talentflow-ai.de)</td></tr>
+  <tr><td>Review frequency</td><td>Monthly KPI dashboard; quarterly full governance review</td></tr>
+</table>
+
+<h3>Key performance indicators</h3>
+<ul>
+<li>Balanced accuracy ≥ 0.82 (aggregate)</li><li>Fairness delta (gender) ≤ ±5 pp vs aggregate</li><li>Fairness delta (age 50+) ≤ ±5 pp vs aggregate</li><li>False negative rate ≤ 0.12</li><li>PSI (input features) &lt; 0.20 (alert) / &lt; 0.25 (model review)</li><li>Recruiter override rate &lt; 15% (trigger: governance review)</li></ul>
+
+<!-- ═══════════════════════════ Section 9 ═══════════════════════════ -->
+<h2 id="s9">9. Serious incidents log <span class="cite">Article 73</span></h2>
+
+<p class="empty">No serious incidents recorded.</p>
+
+<!-- ═══════════════════════════ Appendix A ═══════════════════════════ -->
+<h2 id="sa">Appendix A — Evidence index</h2>
+
+<table>
+  <tr><th>ID</th><th>Type</th><th>URI</th><th>Used in sections</th></tr>
+  <tr>
+    <td>EV-001</td>
+    <td>Data Processing Agreements register</td>
+    <td>evidence/dpa_register.pdf</td>
+    <td>Section 2 — Training data</td>
+  </tr>
+  <tr>
+    <td>EV-002</td>
+    <td>Bias analysis report v1.2</td>
+    <td>evidence/bias_analysis_v1.2.pdf</td>
+    <td>Section 2 — Bias analysis, Section 4 — Risk management</td>
+  </tr>
+  <tr>
+    <td>EV-003</td>
+    <td>Model evaluation report v1.2</td>
+    <td>evidence/model_eval_v1.2.pdf</td>
+    <td>Section 3 — Accuracy metrics</td>
+  </tr>
+  <tr>
+    <td>EV-004</td>
+    <td>AI Governance Committee minutes 2026-01-20</td>
+    <td>evidence/agc_minutes_2026_01_20.pdf</td>
+    <td>Section 4 — Risk acceptance</td>
+  </tr>
+  <tr>
+    <td>EV-005</td>
+    <td>ISO 42001 gap analysis</td>
+    <td>evidence/iso42001_gap_analysis.pdf</td>
+    <td>Section 6 — Harmonised standards</td>
+  </tr>
+  <tr>
+    <td>EV-006</td>
+    <td>Risk register v1.2 (current)</td>
+    <td>evidence/risk_register_v1.2.pdf</td>
+    <td>Section 4 — Risk management</td>
+  </tr>
+</table>
+
+<!-- ═══════════════ Appendix B — Provenance table ═══════════════ -->
+<h2 id="sb">Appendix B — Field provenance</h2>
+<p class="section-cite">Every field extracted by an ingestor carries machine-readable provenance.
+Fields attested by a human carry a ComplianceClaim reference.</p>
+
+
+<table>
+  <tr><th>Field</th><th>Value</th><th>Source</th><th>Ref</th><th>Extracted</th><th>Confidence</th><th>Conflict</th></tr>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+</table>
+
+<div class="disclaimer" style="margin-top:2rem; border-left-color:#003399;">
+  <strong>annex4-cli v2026 — informational tool only, not legal advice.</strong><br>
+  This technical documentation is produced by annex4-cli to support compliance with Article 11 and Annex IV of Regulation (EU) 2024/1689. It does not constitute a conformity assessment. Where third-party conformity assessment by a notified body is required under Article 43, obtaining that assessment remains the responsibility of the provider. This document is informational; it is not legal advice.
+</div>
+
+<div class="footer">
+  annex4-cli — informational tool, not legal advice &bull; 2026-04-24 19:15 UTC &bull; Regulation (EU) 2024/1689
+</div>
+
+</body>
+</html>

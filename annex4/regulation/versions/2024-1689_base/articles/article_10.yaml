@@ -1,0 +1,45 @@
+identifier: '10'
+title: Data and data governance
+text: '1. High-risk AI systems which make use of techniques involving the training
+  of models with data shall be developed on the basis of training, validation and
+  testing data sets that meet the quality criteria referred to in paragraphs 2 to
+  5.
+
+  2. Training, validation and testing data sets shall be subject to data governance
+  and management practices appropriate for the intended purpose of the high-risk AI
+  system. Those practices shall concern in particular:
+
+  (a) the relevant design choices;
+
+  (b) data collection processes and the origin of data, and in the case of personal
+  data, the original purpose of the data collection;
+
+  (c) relevant data-preparation processing operations, such as annotation, labelling,
+  cleaning, enrichment and aggregation;
+
+  (d) the formulation of assumptions, notably with respect to the information that
+  the data is supposed to measure and represent;
+
+  (e) an assessment of the availability, quantity and suitability of the data sets
+  that are needed;
+
+  (f) examination in view of possible biases that are likely to affect health, safety
+  or fundamental rights;
+
+  (g) the identification of any possible data gaps or shortcomings, and how those
+  gaps and shortcomings are addressed.
+
+  3. Training, validation and testing data sets shall be relevant, sufficiently representative,
+  and to the best extent possible, free of errors and complete in view of the intended
+  purpose. They shall have the appropriate statistical properties, including, where
+  applicable, as regards the persons or groups of persons in relation to whom the
+  high-risk AI system is intended to be used.
+
+  5. To the extent that it is strictly necessary for the purposes of ensuring bias
+  detection and correction in relation to the high-risk AI systems, the providers
+  of such systems may process special categories of personal data referred to in Article
+  9(1) of Regulation (EU) 2016/679, Article 10 of Directive (EU) 2016/680, and Article
+  10(1) of Regulation (EU) 2018/1725, subject to appropriate safeguards for the fundamental
+  rights and freedoms of natural persons.
+
+  '

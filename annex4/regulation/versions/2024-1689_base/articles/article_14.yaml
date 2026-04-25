@@ -1,0 +1,45 @@
+identifier: '14'
+title: Human oversight
+text: '1. High-risk AI systems shall be designed and developed in such a way, including
+  with appropriate human-machine interface tools, that they can be effectively overseen
+  by natural persons during the period in which the AI system is in use.
+
+  2. Human oversight shall aim at preventing or minimising the risks to health, safety
+  or fundamental rights that may emerge when a high-risk AI system is used in accordance
+  with its intended purpose or under conditions of reasonably foreseeable misuse,
+  in particular when such risks persist despite the application of other requirements
+  set out in this Chapter.
+
+  3. The oversight measures shall be commensurate with the risks, level of autonomy
+  and context of use of the high-risk AI system, and shall be ensured by either one
+  or both of the following types of built-in operational tools:
+
+  (a) measures that enable the individuals to whom human oversight is assigned to
+  adequately understand the capabilities and limitations of the high-risk AI system
+  and be able to duly monitor its operation, so that signs of anomalies, dysfunctions
+  and unexpected performance can be detected and addressed as soon as possible;
+
+  (b) measures that enable the individuals to whom human oversight is assigned to
+  remain aware of the possible tendency of automatically relying or over-relying on
+  the output produced by a high-risk AI system (''automation bias'');
+
+  (c) measures that enable the individuals to whom human oversight is assigned to
+  correctly interpret the high-risk AI system''s output, taking into account in particular
+  the characteristics of the system and the interpretation tools and methods available;
+
+  (d) measures that enable the individuals to whom human oversight is assigned to
+  decide, in any particular situation, not to use the high-risk AI system or otherwise
+  disregard, override or reverse the output of the high-risk AI system;
+
+  (e) measures that enable the individuals to whom human oversight is assigned to
+  intervene on the operation of the high-risk AI system or interrupt the system through
+  a ''stop'' button or a similar procedure that allows the system to come to a halt
+  in a safe state.
+
+  4. For high-risk AI systems referred to in Annex III, points 1 to 8, the human oversight
+  measures referred to in paragraph 3 shall ensure that, additionally, no action or
+  decision is taken by the deployer on the basis of the identification resulting from
+  the system unless that identification has been verified and confirmed by at least
+  two natural persons with the necessary competence, training and authority.
+
+  '

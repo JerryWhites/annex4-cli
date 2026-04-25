@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Informational tool output; not legal advice.">
+  <meta name="generator" content="annex4-cli">
+  <title>CreditSense Pro v2.1.0 Annex IV Technical Documentation — annex4-cli draft, not legal advice</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: Georgia, "Times New Roman", serif; font-size: 14px; line-height: 1.7;
+           color: #1a1a1a; max-width: 1000px; margin: 0 auto; padding: 2.5rem 2rem; }
+    h1 { font-size: 1.7rem; border-bottom: 3px solid #003399; padding-bottom: 0.4rem; margin-bottom: 0.3rem; }
+    h2 { font-size: 1.25rem; border-bottom: 1px solid #003399; color: #003399;
+         margin-top: 2.5rem; padding-bottom: 0.2rem; }
+    h3 { font-size: 1rem; margin-top: 1.4rem; margin-bottom: 0.3rem; color: #333; }
+    table { width: 100%; border-collapse: collapse; margin: 0.8rem 0 1.2rem; font-size: 13px; }
+    th { background: #003399; color: #fff; padding: 0.4rem 0.6rem; text-align: left; font-weight: bold; }
+    td { padding: 0.4rem 0.6rem; border-bottom: 1px solid #dde; vertical-align: top; }
+    tr:nth-child(even) td { background: #f4f6fb; }
+    .meta-table td:first-child { font-weight: bold; width: 40%; color: #444; }
+    .disclaimer { background: #fffbe6; border-left: 4px solid #e0b800; padding: 0.8rem 1rem;
+                  margin: 1.2rem 0; font-size: 13px; }
+    .toc { background: #f0f4ff; border: 1px solid #c0cff0; border-radius: 4px;
+           padding: 1rem 1.5rem; margin-bottom: 2rem; }
+    .toc ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+    .toc li { margin: 0.2rem 0; }
+    .toc a { color: #003399; text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+    .cite { font-size: 11px; color: #666; font-style: italic; margin-left: 0.5rem; }
+    .badge-high { color: #cc0000; font-weight: bold; }
+    .badge-medium { color: #e07000; font-weight: bold; }
+    .badge-open { color: #cc0000; }
+    .badge-closed { color: #008800; }
+    .empty { color: #999; font-style: italic; }
+    .footer { margin-top: 3rem; border-top: 1px solid #ccc; padding-top: 0.8rem;
+              font-size: 11px; color: #888; text-align: center; }
+    @media print { body { max-width: 100%; padding: 1rem; } h2 { page-break-before: always; } }
+    @page { margin: 2cm; @bottom-center { content: "annex4-cli draft, not legal advice — " attr(data-reg-version); font-size: 9px; color: #888; } }
+  </style>
+</head>
+<body>
+
+
+<h1>Annex IV Technical Documentation</h1>
+<p>
+  <strong>CreditSense Pro</strong> &mdash; v2.1.0<br>
+  <span class="cite">Regulation (EU) 2024/1689 &bull; Annex IV</span>
+</p>
+
+<div class="disclaimer">
+  <strong>Scope.</strong> This technical documentation is produced to support compliance with
+  Article&nbsp;11 and Annex&nbsp;IV of Regulation&nbsp;(EU)&nbsp;2024/1689. It does not
+  constitute a conformity assessment. This document is informational and is not legal advice.
+</div>
+
+<div class="toc">
+  <strong>Table of Contents</strong>
+  <ol>
+    <li><a href="#s1">General description of the AI system</a></li>
+    <li><a href="#s2">Detailed description of elements and development process</a></li>
+    <li><a href="#s3">Monitoring, functioning and control</a></li>
+    <li><a href="#s4">Risk management system (Article 9)</a></li>
+    <li><a href="#s5">Lifecycle changes</a></li>
+    <li><a href="#s6">Harmonised standards applied</a></li>
+    <li><a href="#s7">EU declaration of conformity</a></li>
+    <li><a href="#s8">Post-market monitoring plan (Article 72)</a></li>
+    <li><a href="#s9">Serious incidents log (Article 73)</a></li>
+    <li><a href="#sa">Appendix A &mdash; Evidence index</a></li>
+  </ol>
+</div>
+
+<!-- ═══════════════════════════ Section 1 ═══════════════════════════ -->
+<h2 id="s1">1. General description of the AI system <span class="cite">Annex IV §1</span></h2>
+
+<h3>1.1 Provider</h3>
+<table class="meta-table">
+  <tr><td>Provider name</td><td>FinAI Solutions B.V.</td></tr>
+  <tr><td>Registration number</td><td>KvK 87654321 (Amsterdam)</td></tr>
+  <tr><td>Registered address</td><td>Herengracht 182, 1016 BR Amsterdam, Netherlands</td></tr>
+  <tr><td>Market surveillance contact</td><td>ai-compliance@finai-solutions.eu</td></tr>
+  <tr><td>Authorised signatory</td><td>Pieter van der Berg, Chief Risk Officer</td></tr>
+  <tr><td>AI Governance owner</td><td>Sophie Müller, AI Ethics Officer</td></tr>
+  <tr><td>EU representative</td><td>FinAI Solutions B.V. (established in the Union)</td></tr>
+</table>
+
+<h3>1.2 System identity</h3>
+<table class="meta-table">
+  <tr><td>System name</td><td>CreditSense Pro</td></tr>
+  <tr><td>Version</td><td>2.1.0</td></tr>
+  <tr><td>Git commit</td><td>b7d4e891</td></tr>
+  <tr><td>Release date</td><td>2026-02-01</td></tr>
+  <tr><td>Risk classification</td><td>High-risk — Annex III §5(b), Article 6(2)</td></tr>
+  <tr><td>Annex III category</td><td>Access to essential private services — creditworthiness assessment — Annex III §5(b)</td></tr>
+  <tr><td>Regulation version</td><td>2024-1689_base</td></tr>
+</table>
+
+<h3>1.3 Intended purpose</h3>
+<table class="meta-table">
+  <tr><td>Description</td><td>CreditSense Pro assesses the creditworthiness of natural persons applying for retail credit products (personal loans, credit cards, mortgages) at partner financial institutions. The system produces a credit score [0–1000] and a risk tier (A–E). Loan officers use the output as one input in the credit decision process — it does not make or automate credit decisions.
+</td></tr>
+  <tr><td>Intended users</td><td>Loan officers and credit analysts at partner financial institutions. All credit decisions require human review.
+</td></tr>
+  <tr><td>Deployment form</td><td>API integration with partner banking core systems; web dashboard</td></tr>
+  <tr><td>Geographic scope</td><td>EU member states — validated on data from DE, NL, FR, BE, AT</td></tr>
+  <tr><td>Persons affected</td><td>EU natural persons applying for retail credit at institutions using CreditSense Pro. Applicants are informed of AI-assisted assessment in pre-contractual documents.
+</td></tr>
+</table>
+
+<h3>1.4 Foreseeable misuse</h3>
+<ul>
+<li>Automated rejection without loan officer review</li><li>Use outside validated product types (e.g., commercial credit, SME lending)</li><li>Deployment in member states outside validated scope</li><li>Use without providing applicants the right to human review (GDPR Art. 22)</li></ul>
+
+<!-- ═══════════════════════════ Section 2 ═══════════════════════════ -->
+<h2 id="s2">2. Development process <span class="cite">Annex IV §2</span></h2>
+
+<table class="meta-table">
+  <tr><td>Methodology</td><td>Ensemble model: logistic regression (interpretability) + LightGBM (predictive lift) combined via stacking. Trained on 36 months of credit performance panel data. Separate sub-models per product type (personal loan, credit card, mortgage) routed by a product classifier. No online learning; all models stateless.
+</td></tr>
+  <tr><td>Architecture</td><td>Three-stage pipeline: (1) product classifier → (2) product-specific LightGBM/LR ensemble producing probability of default (12-month horizon) → (3) score calibration layer mapping to [0–1000] scale and A–E risk tier. All components versioned and immutable at inference time.
+</td></tr>
+  <tr><td>Inputs</td><td>Credit bureau data (payment history 36 months, utilisation, account count, derogatory marks), application data (amount, term, purpose), and verified income. No behavioural, social media, or non-financial alternative data. PII stripped before model inference.
+</td></tr>
+  <tr><td>Outputs</td><td>Credit score [0–1000], risk tier (A–E), 12-month probability of default, top-5 contributing factors in plain language for regulatory disclosure.
+</td></tr>
+  <tr><td>Pre-trained components</td><td>None.</td></tr>
+  <tr><td>Design choices rationale</td><td>Logistic regression component maintained for EBA internal model governance compliance (interpretability requirement). LightGBM adds ~0.03 AUC lift.
+</td></tr>
+</table>
+
+<h3>2.1 Training data sources</h3>
+<table>
+  <tr><th>Name</th><th>Origin</th><th>Volume</th><th>Licence</th></tr>
+  <tr>
+    <td>FinAI Credit Performance Panel 2021–2024</td>
+    <td>Anonymised credit data from 8 partner banks; GDPR-compliant DSAs</td>
+    <td>4 200 000 loan observations; 312 000 default events</td>
+    <td>Bilateral Data Sharing Agreements</td>
+  </tr>
+  <tr>
+    <td>Creditreform Bureau Data (DE, AT)</td>
+    <td>Creditreform AG — licensed credit bureau data</td>
+    <td>Supplementary tradeline data for 1 800 000 observations</td>
+    <td>Creditreform commercial data licence (annual)</td>
+  </tr>
+</table>
+
+<h3>2.2 Bias analysis</h3>
+<table>
+  <tr><th>Attribute</th><th>Population share</th><th>Reference share</th><th>Delta</th><th>Action taken</th></tr>
+  <tr>
+    <td>Gender: female applicants</td>
+    <td>46.8%</td>
+    <td>50.3% (ECB Household Finance Survey)</td>
+    <td>-3.5 pp</td>
+    <td>Gender removed from feature set. Gender-correlated employment sector codes removed (correlation r=0.41). Residual delta attributable to legitimate financial profile differences; accepted by Ethics Board.
+</td>
+  </tr>
+  <tr>
+    <td>Age: under 25</td>
+    <td>8.2%</td>
+    <td>12.1% (ECB HFS)</td>
+    <td>-3.9 pp (higher decline rates)</td>
+    <td>Inherent to credit history length. Deployers advised to offer alternative products. Reject inference applied to reduce feedback loop bias.
+</td>
+  </tr>
+</table>
+
+<!-- ═══════════════════════════ Section 3 ═══════════════════════════ -->
+<h2 id="s3">3. Monitoring, functioning and control <span class="cite">Annex IV §3 / Article 15</span></h2>
+
+<table class="meta-table">
+  <tr><td>Capabilities and limitations</td><td>Validated for retail credit in DE, NL, FR, BE, AT. NOT for: commercial credit, SME lending, investment products, applicants with &lt; 6 months credit history, or member states outside validated scope. Not the sole basis for credit decisions.
+</td></tr>
+  <tr><td>Foreseeable unintended outcomes</td><td>(1) Over-reliance by loan officers on score without reading contributing factors. (2) Structural disadvantage for young applicants lacking credit history. (3) Temporal drift under macroeconomic regime change (post-2025 conditions). (4) Feedback loops: declined applicants cannot build credit history.
+</td></tr>
+  <tr><td>Human oversight measures</td><td>(1) Loan officer sign-off required for all decisions above €500; automated approval/rejection technically blocked. (2) GDPR Art. 22 right to human review implemented with automated disclosure letter. (3) Top-5 contributing factors displayed to loan officer. (4) Override rate monitored monthly.
+</td></tr>
+  <tr><td>Cybersecurity measures</td><td>ISO 27001-certified environment. mTLS API authentication. AES-256 encryption at rest; TLS 1.3 in transit. Air-gapped model registry. Annual pen testing. GDPR DPIA completed and filed with DPA Netherlands.
+</td></tr>
+</table>
+
+<h3>3.1 Accuracy metrics</h3>
+<h4>AUC-ROC (12-month default)</h4>
+<table class="meta-table">
+  <tr><td>Aggregate value</td><td>0.847</td></tr>
+  <tr><td>Confidence interval</td><td>[0.841, 0.853] at 95% CI</td></tr>
+  <tr><td>Methodology note</td><td>Out-of-time validation cohort H2 2024 (280 000 obs). Bootstrap CI 1000 samples.
+</td></tr>
+</table>
+<table>
+  <tr><th>Subpopulation</th><th>N</th><th>Value</th><th>CI</th><th>Δ vs. aggregate</th></tr>
+  <tr>
+    <td>Product: personal loan</td>
+    <td>—</td>
+    <td>0.861</td>
+    <td>—</td>
+    <td>+0.014</td>
+  </tr>
+  <tr>
+    <td>Product: credit card</td>
+    <td>—</td>
+    <td>0.843</td>
+    <td>—</td>
+    <td>-0.004</td>
+  </tr>
+  <tr>
+    <td>Product: mortgage</td>
+    <td>—</td>
+    <td>0.829</td>
+    <td>—</td>
+    <td>-0.018</td>
+  </tr>
+  <tr>
+    <td>Gender: female</td>
+    <td>—</td>
+    <td>0.841</td>
+    <td>—</td>
+    <td>-0.006</td>
+  </tr>
+  <tr>
+    <td>Age: under 25</td>
+    <td>—</td>
+    <td>0.798</td>
+    <td>—</td>
+    <td>-0.049</td>
+  </tr>
+</table>
+
+<h3>3.2 Robustness issues</h3>
+<table>
+  <tr><th>ID</th><th>Category</th><th>Severity</th><th>Status</th><th>Rationale</th></tr>
+  <tr>
+    <td>ROB-001</td>
+    <td>Temporal drift — post-2025 macroeconomic shift</td>
+    <td class="badge-medium">Medium</td>
+    <td class="badge-monitored">Monitored</td>
+    <td>PSI increasing in Q1 2026; within alert threshold but trending upward. Retrain planned Q2 2026 with 2023–2025 data.
+</td>
+  </tr>
+</table>
+
+<!-- ═══════════════════════════ Section 4 ═══════════════════════════ -->
+<h2 id="s4">4. Risk management system <span class="cite">Article 9</span></h2>
+
+<table class="meta-table">
+  <tr><td>Process description</td><td>Bi-annual review by Model Risk Management Committee (CRO, AI Ethics Officer, CCO, external validator). Aligned with EBA GL/2017/11. All changes require pre-deployment validation and committee sign-off.
+</td></tr>
+  <tr><td>Residual risk acceptance</td><td>—</td></tr>
+</table>
+
+<table>
+  <tr><th>Risk</th><th>Likelihood</th><th>Impact</th><th>Mitigation</th><th>Residual risk</th><th>Accepted by</th></tr>
+  <tr>
+    <td>Disparate impact on under-25 applicants — structurally lower scores</td>
+    <td>High</td>
+    <td>Medium</td>
+    <td>Disclosed as known limitation. Deployers required to offer alternative products. Reject inference reduces feedback loop bias.
+</td>
+    <td>Inherent; accepted with disclosure controls.</td>
+    <td>Model Risk Management Committee, 2026-01-15</td>
+  </tr>
+  <tr>
+    <td>Temporal drift — macroeconomic regime change</td>
+    <td>Medium</td>
+    <td>High</td>
+    <td>Monthly PSI monitoring; retrain at PSI &gt; 0.25. Q2 2026 retrain scheduled.
+</td>
+    <td>Medium; actively monitored.</td>
+    <td>Model Risk Management Committee, 2026-01-15</td>
+  </tr>
+  <tr>
+    <td>GDPR Art. 22 — applicant right to human review not implemented</td>
+    <td>Low</td>
+    <td>High</td>
+    <td>Technical controls force loan officer review for amounts &gt; €500. GDPR Art. 22 disclosure in automated notice. DPO-confirmed 2026-01-10.
+</td>
+    <td>Low.</td>
+    <td>Chief Compliance Officer, 2026-01-15</td>
+  </tr>
+</table>
+
+<!-- ═══════════════════════════ Section 5 ═══════════════════════════ -->
+<h2 id="s5">5. Lifecycle changes <span class="cite">Article 16(d)</span></h2>
+
+<table class="meta-table">
+  <tr><td>Previous version</td><td>2.0.0</td></tr>
+  <tr><td>Substantiality assessment</td><td>v2.0.0 → v2.1.0: Non-substantial. Data refresh and hyperparameter optimisation only; no architecture, feature set, or intended purpose change. Confirmed by external validator 2026-01-28.
+</td></tr>
+</table>
+
+<table>
+  <tr><th>Field</th><th>Change description</th><th>Trigger</th><th>Substantial?</th><th>Approved by</th></tr>
+  <tr>
+    <td>development_process.data_governance.training_sources</td>
+    <td>Added H2 2024 data cohort; removed pre-2021 data.</td>
+    <td>Scheduled annual data refresh</td>
+    <td>False</td>
+    <td>Model Risk Management Committee</td>
+  </tr>
+</table>
+
+<!-- ═══════════════════════════ Section 6 ═══════════════════════════ -->
+<h2 id="s6">6. Harmonised standards <span class="cite">Annex IV §6</span></h2>
+
+<table>
+  <tr><th>Standard</th><th>Clause</th><th>Conformance</th><th>Evidence</th></tr>
+  <tr>
+    <td>ISO/IEC 42001:2023 — AI Management System</td>
+    <td>Clause 8, Clause 9</td>
+    <td>Certification in progress — audit Q3 2026</td>
+    <td>evidence/iso42001_audit_plan.pdf</td>
+  </tr>
+  <tr>
+    <td>EBA GL/2017/11 — Internal Model Governance</td>
+    <td>Full scope</td>
+    <td>Applied — external validation completed 2026-01-28</td>
+    <td>evidence/external_validation_report_v2.1.pdf</td>
+  </tr>
+</table>
+
+<!-- ═══════════════════════════ Section 7 ═══════════════════════════ -->
+<h2 id="s7">7. EU declaration of conformity <span class="cite">Annex IV §7 / Article 47</span></h2>
+
+<table class="meta-table">
+  <tr><td>Declaration reference</td><td>DOC-FA-2026-CS-001</td></tr>
+  <tr><td>Declaration date</td><td>2026-02-01</td></tr>
+  <tr><td>Notified body required</td><td>False</td></tr>
+  <tr><td>Notified body name</td><td>—</td></tr>
+  <tr><td>Notified body certificate</td><td>—</td></tr>
+  <tr><td>Notes</td><td>Internal control (Annex VI). Notified body not required where harmonised standards applied (Article 43(1), Annex III §5(b) systems).
+</td></tr>
+</table>
+
+<!-- ═══════════════════════════ Section 8 ═══════════════════════════ -->
+<h2 id="s8">8. Post-market monitoring plan <span class="cite">Article 72</span></h2>
+
+<table class="meta-table">
+  <tr><td>Monitoring approach</td><td>Monthly AUC-ROC on live-labelled cohort (12-month rolling, n ≈ 15 000/month). Weekly PSI on input features. Quarterly Gini and vintage analysis. Bi-annual full external validation.
+</td></tr>
+  <tr><td>Drift detection method</td><td>PSI on 20 most predictive features, weekly. Monthly characteristic analysis reports.
+</td></tr>
+  <tr><td>Update trigger thresholds</td><td>PSI &gt; 0.25 → immediate model review. AUC drop &gt; 0.03 from baseline → emergency retrain.
+</td></tr>
+  <tr><td>Responsible person</td><td>Sophie Müller, AI Ethics Officer (s.muller@finai-solutions.eu)</td></tr>
+  <tr><td>Review frequency</td><td>Monthly dashboard; bi-annual full validation</td></tr>
+</table>
+
+<h3>Key performance indicators</h3>
+<ul>
+<li>AUC-ROC ≥ 0.82 (aggregate) — monthly</li><li>AUC-ROC ≥ 0.79 (per product) — monthly</li><li>PSI &lt; 0.20 (weekly alert) / &lt; 0.25 (mandatory review trigger)</li><li>Gini ≥ 0.62 — quarterly</li><li>Fairness delta (gender) ≤ ±6 pp — quarterly</li></ul>
+
+<!-- ═══════════════════════════ Section 9 ═══════════════════════════ -->
+<h2 id="s9">9. Serious incidents log <span class="cite">Article 73</span></h2>
+
+<p class="empty">No serious incidents recorded.</p>
+
+<!-- ═══════════════════════════ Appendix A ═══════════════════════════ -->
+<h2 id="sa">Appendix A — Evidence index</h2>
+
+<table>
+  <tr><th>ID</th><th>Type</th><th>URI</th><th>Used in sections</th></tr>
+  <tr>
+    <td>EV-001</td>
+    <td>Data Sharing Agreement register v2.1</td>
+    <td>evidence/dsa_register_v2.1.pdf</td>
+    <td>Section 2</td>
+  </tr>
+  <tr>
+    <td>EV-002</td>
+    <td>External model validation report v2.1</td>
+    <td>evidence/external_validation_report_v2.1.pdf</td>
+    <td>Section 3, Section 6</td>
+  </tr>
+  <tr>
+    <td>EV-003</td>
+    <td>GDPR DPIA — CreditSense Pro</td>
+    <td>evidence/dpia_creditsense_v2.1.pdf</td>
+    <td>Section 3, Section 4</td>
+  </tr>
+  <tr>
+    <td>EV-004</td>
+    <td>MRMC minutes 2026-01-15</td>
+    <td>evidence/mrmc_minutes_2026_01_15.pdf</td>
+    <td>Section 4</td>
+  </tr>
+</table>
+
+<!-- ═══════════════ Appendix B — Provenance table ═══════════════ -->
+<h2 id="sb">Appendix B — Field provenance</h2>
+<p class="section-cite">Every field extracted by an ingestor carries machine-readable provenance.
+Fields attested by a human carry a ComplianceClaim reference.</p>
+
+
+<table>
+  <tr><th>Field</th><th>Value</th><th>Source</th><th>Ref</th><th>Extracted</th><th>Confidence</th><th>Conflict</th></tr>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+</table>
+
+<div class="disclaimer" style="margin-top:2rem; border-left-color:#003399;">
+  <strong>annex4-cli v2026 — informational tool only, not legal advice.</strong><br>
+  This technical documentation is produced by annex4-cli to support compliance with Article 11 and Annex IV of Regulation (EU) 2024/1689. It does not constitute a conformity assessment. Where third-party conformity assessment by a notified body is required under Article 43, obtaining that assessment remains the responsibility of the provider. This document is informational; it is not legal advice.
+</div>
+
+<div class="footer">
+  annex4-cli — informational tool, not legal advice &bull; 2026-04-24 19:15 UTC &bull; Regulation (EU) 2024/1689
+</div>
+
+</body>
+</html>

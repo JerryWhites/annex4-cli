@@ -1,0 +1,17 @@
+# Substantiality mapping for Regulation (EU) 2024-1689
+# Maps field paths inside AnnexIVDossier to 'substantial', 'non_substantial', or 'ambiguous'
+
+"general_description.intended_purpose.description": "substantial"
+"general_description.intended_purpose.intended_users": "substantial"
+"general_description.intended_purpose.deployment_form": "ambiguous"
+"general_description.intended_purpose.geographic_scope": "ambiguous"
+"general_description.intended_purpose.persons_affected": "substantial"
+"general_description.intended_purpose.foreseeable_misuse": "substantial"
+"general_description.system.classification": "substantial"
+
+"monitoring_functioning_control.accuracy_metrics.aggregate_value": "non_substantial"
+"monitoring_functioning_control.accuracy_metrics.subpopulation_breakdown": "non_substantial"
+
+"risk_management.identified_risks.risk": "substantial"
+
+"lifecycle_changes": "non_substantial"

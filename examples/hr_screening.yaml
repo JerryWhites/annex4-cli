@@ -1,0 +1,359 @@
+meta:
+  generated_by: annex4-cli
+  regulation_version: 2024-1689_base
+  dossier_schema_version: 1.0.0
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Section 1 — General description
+# Annex IV §1 | Articles 3, 13, 26
+# ─────────────────────────────────────────────────────────────────────────────
+general_description:
+  provider:
+    name: TalentFlow AI GmbH
+    registration_number: HRB 242301 B (Amtsgericht Charlottenburg)
+    address: Unter den Linden 42, 10117 Berlin, Germany
+    contact_email: ai-compliance@talentflow-ai.de
+    authorized_signatory: Dr. Erika Muster, Chief Executive Officer
+    ai_governance_owner: Jan Kovář, Head of AI Governance
+    eu_representative: TalentFlow AI GmbH (established in the Union)
+
+  system:
+    name: TalentFlow ScreenAI
+    version: 1.2.0
+    git_commit: a3f9c12d
+    release_date: "2026-03-15"
+    classification: "High-risk — Annex III §4(a), Article 6(2)"
+    annex_iii_category: "Employment, workers management and access to self-employment — Annex III §4(a)"
+    regulation_version: 2024-1689_base
+
+  intended_purpose:
+    description: >
+      TalentFlow ScreenAI automatically screens, ranks, and shortlists job applications
+      for white-collar and technical positions. The system analyses structured applicant
+      data (CV text, application form fields) and produces a ranked shortlist with
+      explanatory score breakdowns for each candidate. The system is designed to assist —
+      not replace — human recruiters in the initial screening phase.
+    intended_users: >
+      HR professionals and recruitment specialists at partner organisations who use
+      TalentFlow ScreenAI as an assistive tool for initial candidate screening.
+      All system outputs require human review before any employment decision is made.
+    deployment_form: SaaS — accessed via web dashboard and REST API
+    geographic_scope: European Union; not validated for use outside EU member states
+    persons_affected: >
+      Natural persons who submit job applications to organisations using TalentFlow ScreenAI.
+      Applicants are notified of AI-assisted screening in the job posting and application form.
+    foreseeable_misuse:
+      - Automated rejection without human review of individual candidates
+      - Use as the sole basis for employment decisions without recruiter oversight
+      - Screening on characteristics not listed in the approved feature set
+      - Deployment in jurisdictions outside the validated geographic scope
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Section 2 — Development process
+# Annex IV §2 | Articles 9, 10
+# ─────────────────────────────────────────────────────────────────────────────
+development_process:
+  methodology: >
+    Supervised learning using gradient-boosted trees (XGBoost 2.0) trained on
+    six years of historical recruitment data. Feature engineering pipeline
+    extracts structured signals from free-text CV fields via a fine-tuned
+    sentence-transformer (multilingual MiniLM-L12) frozen at inference time.
+    Model selection via 5-fold cross-validation with stratified splits.
+    Final model selected on balanced accuracy across gender subgroups.
+
+  architecture_description: >
+    Two-stage pipeline: (1) NLP feature extractor (sentence-transformer,
+    768-dim embeddings, CPU inference) → (2) XGBoost classifier (500 estimators,
+    max_depth=6, learning_rate=0.05). Output: a continuous score [0, 1]
+    representing screening probability, plus SHAP feature importance breakdown
+    for each prediction. No generative AI components. No real-time learning.
+
+  input_description: >
+    Structured applicant record containing: CV text (free-form, up to 5 000 tokens),
+    application form fields (role applied for, years of experience, highest
+    qualification), and optionally a cover letter. All personal identifiers
+    (name, address, contact details, date of birth) are stripped before
+    the record reaches the model via a PII-removal preprocessor.
+
+  output_description: >
+    A ranked shortlist of candidates with: screening score [0–100], SHAP
+    feature breakdown (top-5 contributing features per candidate), and a
+    plain-language summary of the main factors. The shortlist is delivered
+    to the recruiter dashboard. No direct communication with applicants.
+
+  pre_trained_components: >
+    multilingual-MiniLM-L12-v2 (sentence-transformers, Apache-2.0 licence).
+    Weights frozen; not fine-tuned on TalentFlow data. Used solely for
+    embedding generation.
+
+
+
+          Age-proxy features (graduation year in CV) removed from feature set.
+          Post-mitigation delta: −3.7 pp. Under continued monitoring; corrective action
+          scheduled for v1.3 if delta persists above −3 pp at Q3 2026 review.
+
+    residual_data_gaps: >
+      Underrepresentation of
+      Documented as a known limitation; deployers are advised to apply additional human
+      review for affected applicants.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Section 3 — Monitoring, functioning and control
+# Annex IV §3 | Article 13, 14, 15
+# ─────────────────────────────────────────────────────────────────────────────
+monitoring_functioning_control:
+  capabilities_and_limitations: >
+
+  foreseeable_unintended_outcomes: >
+    (1) Perpetuation of historical hiring biases embedded in training data despite
+    mitigation measures. (2) Proxy discrimination via non-protected features that
+    correlate with protected characteristics (e.g., institution names as proxies for
+    socioeconomic background). (3) Over-reliance by recruiters on AI score without
+    reading underlying rationale. (4) Gaming by applicants aware of high-scoring
+    CV patterns. (5) Disparate impact on applicants with non-linear career histories
+    (e.g., career breaks for caregiving) which the model has limited training signal for.
+
+  human_oversight_measures: >
+    (1) All shortlisted candidates must be reviewed by a qualified recruiter before
+    invitation to interview. Automatic progression is technically blocked. (2) SHAP
+    explanations are displayed alongside every score to support informed human review.
+    (3) Recruiters can override the system ranking at any time with a mandatory
+    rationale field. (4) AI Governance Officer reviews override rates monthly; spikes
+    trigger model review. (5) All deployer staff with access to the dashboard must
+    complete the mandatory AI literacy training module (min. 2 hours) before activation.
+
+  accuracy_metrics:
+    - name: Balanced Accuracy
+      aggregate_value: "0.86"
+      confidence_interval: "[0.84, 0.88] at 95% CI"
+      methodology_note: >
+        Evaluated on TalentFlow Holdout 2024 (62 000 records). Balanced accuracy
+        accounts for class imbalance (87% negative, 13% positive rate in holdout).
+      subpopulation_breakdown:
+        - subpopulation: "Gender: female"
+          value: "0.84"
+          delta_vs_aggregate: "-0.02"
+        - subpopulation: "Gender: male"
+          value: "0.87"
+          delta_vs_aggregate: "+0.01"
+        - subpopulation: "Age: 18–34"
+          value: "0.88"
+          delta_vs_aggregate: "+0.02"
+        - subpopulation: "Age: 35–49"
+          value: "0.86"
+          delta_vs_aggregate: "0.00"
+        - subpopulation: "Age: 50+"
+          value: "0.82"
+          delta_vs_aggregate: "-0.04"
+
+    - name: False Negative Rate (qualified candidates missed)
+      aggregate_value: "0.09"
+      methodology_note: >
+        FNR evaluated at operating threshold 0.55. Recruiter review mitigates impact
+        of false negatives through manual review of candidates near the threshold.
+      subpopulation_breakdown:
+        - subpopulation: "Gender: female"
+          value: "0.11"
+          delta_vs_aggregate: "+0.02"
+        - subpopulation: "Age: 50+"
+          value: "0.14"
+          delta_vs_aggregate: "+0.05"
+
+  robustness_issues:
+    - id: ROB-001
+      category: Adversarial input — CV keyword stuffing
+      severity: Low
+      status: Accepted
+      rationale: >
+        Applicants may inflate CV text with high-scoring keywords. SHAP explanations
+        make this detectable by the reviewing recruiter. No automated countermeasure
+        implemented; accepted as residual risk. Monitoring: flagging logic planned for v1.3.
+
+  cybersecurity_measures: >
+    All API endpoints authenticated via OAuth 2.0 (client credentials flow).
+    PII removed server-side before model inference (dedicated anonymisation service,
+    pen-tested annually). Model artefacts signed and stored in isolated artifact registry.
+    No model weights exposed via API. SOC 2 Type II audit scheduled Q4 2026.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Section 4 — Risk management system
+# Annex IV §4 | Article 9
+# ─────────────────────────────────────────────────────────────────────────────
+risk_management:
+  process_description: >
+    Quarterly risk review conducted by the AI Governance Committee (CTO, Head of AI
+    Governance, Legal Counsel, DPO). Risk register maintained in the internal JIRA
+    project AIGRISK. Each identified risk is assessed for likelihood and impact,
+    assigned a mitigation owner, and tracked to resolution or formal acceptance.
+    Unresolved HIGH risks block new model releases.
+
+  identified_risks:
+    - risk: Disparate impact on female applicants — screening rate below parity
+      likelihood: Medium
+      impact: High
+      mitigation: >
+        Equalized-odds re-weighting applied in training. Monthly fairness dashboard
+        monitored by AI Governance Officer. Threshold for corrective action: delta > 5 pp.
+      residual_risk: Delta currently −2.8 pp; within accepted ±5 pp threshold.
+      accepted_by: AI Governance Committee, 2026-01-20
+
+    - risk: Disparate impact on 50+ applicants — underrepresentation in shortlists
+      likelihood: Medium
+      impact: High
+      mitigation: >
+        Age-proxy features removed from feature set. Sub-population monitoring
+        in production. Corrective action (targeted retraining) scheduled for v1.3
+        if delta remains above −3 pp at Q3 2026 evaluation.
+      residual_risk: Delta −3.7 pp; elevated monitoring status.
+      accepted_by: AI Governance Committee, 2026-01-20
+
+    - risk: Recruiter over-reliance — decisions made without reading SHAP explanations
+      likelihood: Medium
+      impact: Medium
+      mitigation: >
+        UI design forces mandatory display of top-3 SHAP features before the
+        shortlist can be acted upon. AI literacy training required for all users.
+        Override rate monitored monthly.
+      residual_risk: Low; UX controls and training reduce likelihood significantly.
+      accepted_by: Head of Product, 2026-02-05
+
+    - risk: Eastern EU sub-population underperformance — insufficient training data
+      likelihood: High
+      impact: Medium
+      mitigation: >
+        Known limitation disclosed to all deployers in the system documentation.
+        Deployers advised to apply additional human review for affected applicant
+        profiles. Active data collection programme with 3 Eastern EU partner organisations.
+      residual_risk: Medium; data gap to be addressed in v1.4 (target Q4 2026).
+      accepted_by: AI Governance Committee, 2026-01-20
+
+  residual_risk_acceptance: >
+    All residual risks have been formally accepted by the AI Governance Committee.
+    Acceptance is conditional on the monitoring programme remaining active and the
+    v1.3 / v1.4 corrective actions being delivered on schedule.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Section 5 — Lifecycle changes
+# Article 16(d)
+# ─────────────────────────────────────────────────────────────────────────────
+lifecycle_changes:
+  previous_version: 1.1.0
+  substantiality_assessment: >
+    Change from v1.1.0 to v1.2.0 assessed as non-substantial under Article 43(4).
+    No change to intended purpose, training data distribution, or fundamental
+    algorithm design. Accuracy improvement within normal operational variance.
+    Assessment reviewed and confirmed by Legal Counsel 2026-03-10.
+  changes:
+    - field: monitoring_functioning_control.accuracy_metrics.aggregate_value
+      change_description: Balanced accuracy improved from 0.82 to 0.86 following hyperparameter optimisation.
+      trigger: Scheduled Q1 2026 model refresh cycle
+      approved_by: Head of AI Governance
+      is_substantial: false
+
+    - field: development_process.data_governance.training_sources
+      change_description: Added 3 Eastern EU partner organisations to training data pool (62 000 new records).
+      trigger: Strategic data partnership agreements signed Q4 2025
+      approved_by: AI Governance Committee
+      is_substantial: false
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Section 6 — Harmonised standards
+# Annex IV §6
+# ─────────────────────────────────────────────────────────────────────────────
+harmonised_standards:
+  - standard: ISO/IEC 42001:2023 — AI Management System
+    clause: "Clause 6.1 (Risk assessment), Clause 8.4 (AI system lifecycle)"
+    conformance: Partial — gap analysis completed; full certification targeted Q4 2026
+    evidence: evidence/iso42001_gap_analysis.pdf
+
+  - standard: ISO/IEC 23894:2023 — AI Risk Management
+    clause: "Clause 5 (Risk management principles), Clause 6 (Risk assessment)"
+    conformance: Applied as guidance framework for Section 4 risk register
+    evidence: evidence/risk_register_v1.2.pdf
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Section 7 — EU Declaration of Conformity
+# Annex IV §7 | Article 47
+# ─────────────────────────────────────────────────────────────────────────────
+eu_declaration_of_conformity:
+  declaration_reference: DOC-TF-2026-001
+  declaration_date: "2026-03-15"
+  notified_body_required: false
+  notified_body_name: null
+  notified_body_certificate: null
+  notes: >
+    Conformity assessment conducted via internal control procedure (Annex VI).
+    Third-party notified body assessment not required for Annex III §4(a) systems
+    where the provider applies harmonised standards (Article 43(1)).
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Section 8 — Post-market monitoring
+# Annex IV §8 | Article 72
+# ─────────────────────────────────────────────────────────────────────────────
+post_market_monitoring:
+  monitoring_approach: >
+    Monthly evaluation of balanced accuracy and fairness metrics on a live-labelled
+    holdout sample (rolling 90-day window, n ≈ 8 000 records per month). Drift
+    detection via Population Stability Index (PSI) on top-20 input features.
+    Quarterly review by AI Governance Committee with mandatory corrective action
+    trigger if any KPI breaches its threshold.
+
+  key_performance_indicators:
+    - "Balanced accuracy ≥ 0.82 (aggregate)"
+    - "Fairness delta (gender) ≤ ±5 pp vs aggregate"
+    - "Fairness delta (age 50+) ≤ ±5 pp vs aggregate"
+    - "False negative rate ≤ 0.12"
+    - "PSI (input features) < 0.20 (alert) / < 0.25 (model review)"
+    - "Recruiter override rate < 15% (trigger: governance review)"
+
+  drift_detection_method: >
+    Population Stability Index (PSI) computed weekly on the distribution of the
+    top-20 SHAP features. Alert threshold PSI > 0.20; model review triggered at PSI > 0.25.
+
+  update_trigger_thresholds: >
+    Any KPI breach sustained over 2 consecutive monthly evaluations triggers mandatory
+    model review. A breach of the fairness KPIs triggers an emergency governance
+    review within 14 days.
+
+  responsible_person: Jan Kovář, Head of AI Governance (jan.kovar@talentflow-ai.de)
+  review_frequency: Monthly KPI dashboard; quarterly full governance review
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Section 9 — Serious incidents
+# Article 73
+# ─────────────────────────────────────────────────────────────────────────────
+serious_incidents: []
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Appendix A — Evidence index
+# ─────────────────────────────────────────────────────────────────────────────
+evidence_index:
+  - id: EV-001
+    type: Data Processing Agreements register
+    uri: evidence/dpa_register.pdf
+    used_in_sections: ["Section 2 — Training data"]
+
+  - id: EV-002
+    type: Bias analysis report v1.2
+    uri: evidence/bias_analysis_v1.2.pdf
+    used_in_sections: ["Section 2 — Bias analysis", "Section 4 — Risk management"]
+
+  - id: EV-003
+    type: Model evaluation report v1.2
+    uri: evidence/model_eval_v1.2.pdf
+    used_in_sections: ["Section 3 — Accuracy metrics"]
+
+  - id: EV-004
+    type: AI Governance Committee minutes 2026-01-20
+    uri: evidence/agc_minutes_2026_01_20.pdf
+    used_in_sections: ["Section 4 — Risk acceptance"]
+
+  - id: EV-005
+    type: ISO 42001 gap analysis
+    uri: evidence/iso42001_gap_analysis.pdf
+    used_in_sections: ["Section 6 — Harmonised standards"]
+
+  - id: EV-006
+    type: Risk register v1.2 (current)
+    uri: evidence/risk_register_v1.2.pdf
+    used_in_sections: ["Section 4 — Risk management"]

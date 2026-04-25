@@ -1,0 +1,352 @@
+meta:
+  generated_by: annex4-cli
+  regulation_version: 2024-1689_base
+  dossier_schema_version: 1.0.0
+
+general_description:
+  provider:
+    name: MedAI Diagnostics AG
+    registration_number: CHE-123.456.789 (Handelsregister Zürich)
+    address: Binzmühlestrasse 130, 8050 Zürich, Switzerland
+    contact_email: regulatory@medai-diagnostics.ch
+    authorized_signatory: Dr. Lena Fischer, Chief Medical Officer
+    ai_governance_owner: Marco Bruni, AI Safety Director
+    eu_representative: "MedAI Diagnostics EU S.à r.l., Rue du Kiem 103, L-1857 Luxembourg"
+
+  system:
+    name: MedTriage Assist
+    version: 3.0.1
+    git_commit: c9e2f174
+    release_date: "2026-01-20"
+    classification: "High-risk — Annex III §1(b) / Annex I (MDR Class IIa), Article 6(1)"
+    annex_iii_category: "Biometrics / Medical device safety component — Annex III §1(b)"
+    regulation_version: 2024-1689_base
+
+  intended_purpose:
+    description: >
+      MedTriage Assist is an AI-assisted clinical decision support tool for emergency
+      department triage nurses. The system analyses structured patient data (vital signs,
+      chief complaint, triage assessment) and proposes a Manchester Triage System (MTS)
+      category [1–5] to support — not replace — the triage nurse's clinical judgment.
+      The system is a software medical device under Regulation (EU) 2017/745 (MDR)
+      and has been CE-marked as a Class IIa device.
+    intended_users: >
+      Registered triage nurses and emergency physicians at hospitals using the
+      integrated emergency department information system (EDIS). Clinical training
+      on the system required before activation. All triage decisions remain the
+      clinical responsibility of the healthcare professional.
+    deployment_form: >
+      Embedded module within the hospital EDIS; displayed on triage workstation.
+      Not accessible via consumer-facing interfaces. Not a standalone application.
+    geographic_scope: EU member states with validated language support — DE, FR, NL, IT, ES
+    persons_affected: >
+      Patients presenting to emergency departments at hospitals using MedTriage Assist.
+      Patients or their representatives are informed of AI-assisted triage via
+      admission documentation.
+    foreseeable_misuse:
+      - Delegation of triage decision to the AI without clinical nurse review
+      - Use outside emergency department triage context (e.g., ward prioritisation)
+      - Use for paediatric patients without the separately validated paediatric module
+      - Deployment in languages outside the validated five-language scope
+
+development_process:
+  methodology: >
+    Multimodal neural network trained on retrospective triage records from 14 EU
+    emergency departments (2019–2024). Text encoder (ClinicalBERT, multilingual,
+    fine-tuned) processes chief complaint; structured vital sign encoder (two-layer
+    MLP) processes numeric clinical parameters. Late fusion via attention mechanism.
+    Class-weighted cross-entropy loss to address class imbalance (MTS 1–2 cases rare).
+
+  architecture_description: >
+    Input: chief complaint text (max 512 tokens) + structured vital signs (12 fields).
+    Text branch: ClinicalBERT-multilingual (110M params, fine-tuned 3 epochs).
+    Vitals branch: 2-layer MLP [12 → 64 → 32]. Fusion: cross-attention [32 → 32].
+    Output head: softmax over 5 MTS categories. Inference: CPU, < 200ms per prediction.
+    Model frozen at deployment; no federated or online learning.
+
+  input_description: >
+    (1) Chief complaint: free-text entered by triage nurse (5–200 words, 5 validated languages).
+    (2) Vital signs: heart rate, blood pressure (systolic/diastolic), SpO2, respiratory rate,
+    temperature, Glasgow Coma Scale, pain scale [0–10], age (categorical), sex at birth.
+    No imaging, no laboratory results, no patient history data used at this stage.
+
+  output_description: >
+    Proposed MTS triage category [1 = Immediate, 2 = Very Urgent, 3 = Urgent,
+    4 = Standard, 5 = Non-Urgent] with confidence score. Top-3 reasoning factors
+    displayed in plain clinical language. The proposal is displayed alongside the
+    MTS decision flowchart; the nurse selects the final category independently.
+
+  pre_trained_components: >
+    ClinicalBERT-multilingual (Hugging Face, Apache-2.0). Fine-tuned on MedAI
+    retrospective data with full weight updates. Original pre-training data:
+    PubMed, MIMIC-III (de-identified), multilingual clinical notes corpus.
+
+  design_choices_rationale: >
+    Late fusion (rather than early fusion) chosen to preserve interpretability of
+    each modality independently, enabling clinical validation of the text vs vitals
+    contribution to the prediction. Attention-based fusion makes cross-modal
+    reasoning auditable by clinical AI experts.
+
+  data_governance:
+    training_sources:
+      - name: MedAI Retrospective Triage Dataset (EU) v3
+        origin: >
+          De-identified triage records from 14 EU EDs in DE, FR, NL, IT, ES.
+          Data transfer agreements under GDPR Art. 9 (health data) with each hospital.
+          Ethics committee approval obtained at each site.
+        volume: 2 100 000 triage episodes; MTS labels verified by senior emergency physicians
+        license: Data Processing Agreements (health data); research use only
+        evidence_uri: evidence/dpa_register_medical.pdf
+
+    validation_sources:
+      - name: Independent Prospective Validation Cohort 2025
+        origin: Prospectively collected at 4 EDs not in training set; physician gold standard
+        volume: 42 000 episodes
+        license: Separate validation study ethics approval (EudraCT 2025-001234-56)
+
+    bias_analysis:
+      - attribute: "Sex: female patients"
+        population_share: "51.2%"
+        reference_share: "52.1% (EU ED population — ECDC Emergency Care Stats)"
+        delta: "-0.9 pp"
+        action_taken: >
+          No significant disparity detected. Under-triage rate for female patients
+          (MTS category proposed too low by ≥ 1 level): 3.1% vs 3.4% for male
+          (within acceptable clinical variance). Monitored quarterly.
+
+      - attribute: "Age: 75+ (frail elderly)"
+        population_share: "18.3%"
+        reference_share: "21.0% (EU ED population)"
+        delta: "-2.7 pp (higher under-triage rate: 5.8% vs 3.2% aggregate)"
+        action_taken: >
+          Age-specific recalibration layer applied for 75+ cohort. Post-recalibration
+          under-triage rate: 4.1%. Residual gap documented; clinical protocols require
+          senior nurse review for all 75+ patients regardless of AI category proposal.
+
+    data_collection_procedures: >
+      All data collected under GDPR Art. 9 lawful basis (scientific research, Art. 9(2)(j)).
+      Ethics committee approval at each site. Full de-identification (k-anonymity ≥ 5)
+      applied before data transfer. De-identification verified by independent DPO review.
+
+    special_category_data: >
+      Health data (GDPR Art. 9) processed under scientific research basis.
+      No genetic data, no biometric identification data. Patient records pseudonymised;
+      re-identification not possible from the processed dataset.
+
+monitoring_functioning_control:
+  capabilities_and_limitations: >
+    Validated for adult patients (≥ 18) presenting to emergency departments in EU EDs
+    with validated language support. NOT for: paediatric patients (separate module
+    required), psychiatric emergencies (insufficient training data), patients unable
+    to provide chief complaint, out-of-hospital triage, or languages beyond the 5
+    validated. Accuracy decreases for rare presentations (< 0.5% of training data).
+
+  foreseeable_unintended_outcomes: >
+    (1) Under-triage for elderly frail patients — structurally higher rate documented;
+    mitigated by mandatory senior nurse review protocol. (2) Automation bias — nurses
+    anchoring on AI proposal rather than independent assessment. (3) Atypical
+    presentations (NSTEMI without chest pain, stroke without focal deficit) may
+    be under-triaged if chief complaint does not reflect acuity. (4) Language model
+    hallucination risk for rare clinical terms not in training vocabulary — mitigation:
+    confidence threshold filter (proposals below 0.60 confidence suppressed).
+
+  human_oversight_measures: >
+    (1) AI proposal is advisory only — nurse selects final MTS category independently.
+    The system cannot submit a triage category; only the nurse can confirm.
+    (2) Proposals with confidence < 0.60 are not displayed; nurse triages without AI input.
+    (3) All AI proposals and final nurse decisions logged; discordance > 1 MTS level
+    flagged for clinical lead review within 24 hours. (4) Mandatory 4-hour competency
+    training for all triage staff before system activation. (5) Monthly discordance
+    report reviewed by Chief Medical Officer.
+
+  accuracy_metrics:
+    - name: Exact MTS category agreement (AI proposal vs physician gold standard)
+      aggregate_value: "0.783"
+      confidence_interval: "[0.771, 0.795]"
+      methodology_note: >
+        Prospective validation cohort 2025 (42 000 episodes). Physician gold standard:
+        consensus of 2 senior emergency physicians reviewing de-identified records.
+      subpopulation_breakdown:
+        - subpopulation: "MTS 1–2 (Immediate/Very Urgent)"
+          value: "0.891"
+          delta_vs_aggregate: "+0.108"
+        - subpopulation: "MTS 3–4 (Urgent/Standard)"
+          value: "0.772"
+          delta_vs_aggregate: "-0.011"
+        - subpopulation: "Age: 75+"
+          value: "0.741"
+          delta_vs_aggregate: "-0.042"
+        - subpopulation: "Language: Italian"
+          value: "0.758"
+          delta_vs_aggregate: "-0.025"
+
+    - name: Under-triage rate (AI proposes category lower than gold standard by ≥ 1)
+      aggregate_value: "0.032"
+      confidence_interval: "[0.028, 0.036]"
+      methodology_note: >
+        Clinical safety metric. Under-triage is more dangerous than over-triage.
+        Threshold: under-triage rate < 5% at aggregate and < 7% for any subgroup.
+      subpopulation_breakdown:
+        - subpopulation: "Age: 75+"
+          value: "0.041"
+          delta_vs_aggregate: "+0.009"
+        - subpopulation: "MTS 1 (Immediate)"
+          value: "0.018"
+          delta_vs_aggregate: "-0.014"
+
+  robustness_issues:
+    - id: ROB-001
+      category: Distribution shift — Italian language performance gap
+      severity: Medium
+      status: Open
+      rationale: >
+        Italian exact agreement 2.5 pp below aggregate; attributed to lower volume
+        of Italian training data (9% of corpus vs 26% Italian-speaking population).
+        Targeted data collection from 3 Italian EDs initiated Q1 2026.
+        Corrective action (Italian-specific fine-tuning) planned for v3.1 Q3 2026.
+
+  cybersecurity_measures: >
+    MDR-compliant cybersecurity controls (ENISA medical device cybersecurity guidance).
+    EDIS integration via HL7 FHIR R4 over TLS 1.3. No patient data leaves hospital
+    network. Model inference runs on-premises (hospital server; model weights not
+    accessible via API). Annual cybersecurity audit by NL-certified MedTech auditor.
+
+risk_management:
+  process_description: >
+    Continuous risk management per ISO 14971:2019 (medical device risk management).
+    Clinical risk review by Medical Advisory Board (CMO, Head of Emergency Medicine ×2,
+    Patient Safety Officer) biannually. AI Governance review (AI Safety Director,
+    legal counsel, DPO) quarterly. All HIGH clinical risks block release.
+
+  identified_risks:
+    - risk: Under-triage of frail elderly patients (75+) — MTS category too low
+      likelihood: High
+      impact: High
+      mitigation: >
+        Age-specific recalibration applied (under-triage rate reduced from 8.2% to 4.1%).
+        Clinical protocol mandates senior nurse review for all 75+ patients.
+        Monthly monitoring with 5% threshold for emergency clinical review.
+      residual_risk: Under-triage rate 4.1% in 75+ cohort; accepted with mandatory protocol.
+      accepted_by: Medical Advisory Board, 2026-01-10
+
+    - risk: Automation bias — nurse over-reliance on AI proposal
+      likelihood: Medium
+      impact: High
+      mitigation: >
+        UX design: AI proposal appears as a secondary panel, not the primary decision interface.
+        Mandatory training includes bias awareness module. Discordance monitoring flags
+        any nurse with systematically low override rate (< 5% over 30 days) for coaching.
+      residual_risk: Medium — behavioural risk; ongoing training and monitoring mitigate.
+      accepted_by: Chief Medical Officer, 2026-01-10
+
+    - risk: MDR Article 120 — failure to maintain Notified Body certification
+      likelihood: Low
+      impact: High
+      mitigation: >
+        Annual MDR surveillance audit scheduled with BSI Group (Notified Body 2797).
+        Post-market clinical follow-up (PMCF) plan maintained per MDCG 2020-7.
+      residual_risk: Low — contractual and procedural controls in place.
+      accepted_by: Chief Regulatory Officer, 2026-01-10
+
+  residual_risk_acceptance: >
+    All residual risks accepted by the Medical Advisory Board 2026-01-10.
+    Acceptance is conditional on the monitoring programme and clinical protocols
+    remaining active. Re-evaluation required at each major version release.
+
+lifecycle_changes:
+  previous_version: 3.0.0
+  substantiality_assessment: >
+    v3.0.0 → v3.0.1: Non-substantial patch. Bug fix in confidence calibration
+    for MTS category 1 (affected < 0.3% of predictions, no safety impact).
+    Confirmed non-substantial by Medical Advisory Board 2026-01-18 and Notified Body
+    (BSI Group pre-notification accepted 2026-01-19).
+  changes:
+    - field: monitoring_functioning_control.accuracy_metrics
+      change_description: >
+        Calibration correction for MTS 1 confidence score — probability was
+        systematically over-estimated by 0.04 for high-acuity cases.
+      trigger: Post-market surveillance finding from Q4 2025 monthly report
+      approved_by: Chief Medical Officer
+      is_substantial: false
+
+harmonised_standards:
+  - standard: IEC 62304:2006+AMD1:2015 — Medical device software lifecycle
+    clause: Full scope (Class B software)
+    conformance: Compliant — verified in MDR Technical File (Annex II)
+    evidence: evidence/iec62304_compliance_matrix.pdf
+  - standard: ISO 14971:2019 — Medical device risk management
+    clause: Full scope
+    conformance: Compliant — risk management file maintained per standard
+    evidence: evidence/risk_management_file_v3.0.1.pdf
+  - standard: ISO/IEC 62443-4-2 — Cybersecurity for industrial systems (applied to medical)
+    clause: "SL-1 requirements"
+    conformance: Partial — cybersecurity gap analysis complete; full compliance targeted Q4 2026
+    evidence: evidence/cybersecurity_gap_analysis.pdf
+
+eu_declaration_of_conformity:
+  declaration_reference: DOC-MAD-2026-MT-001
+  declaration_date: "2026-01-20"
+  notified_body_required: true
+  notified_body_name: BSI Group (Notified Body 2797)
+  notified_body_certificate: CE 2797/MDR/2026/001 — MedTriage Assist v3.x, Class IIa
+  notes: >
+    MDR Class IIa medical device; Notified Body conformity assessment required
+    under Article 52(4) MDR. Also classified as high-risk AI under Annex I MDR
+    (safety component), invoking Article 6(1) of the EU AI Act.
+    MDR CE mark: MDD → MDR transition completed 2025-12-31.
+
+post_market_monitoring:
+  monitoring_approach: >
+    Post-Market Clinical Follow-Up (PMCF) per MDCG 2020-7 and MDR Annex XIV.
+    Monthly discordance analysis (AI proposal vs nurse decision vs final clinical outcome).
+    Quarterly under-triage rate evaluation against 5% threshold. Annual PMCF report
+    submitted to BSI Group. Serious incident reporting per MDR Article 87 and
+    EU AI Act Article 73.
+
+  key_performance_indicators:
+    - "Under-triage rate < 5% (aggregate) — monthly"
+    - "Under-triage rate < 7% for any subgroup — monthly"
+    - "Exact category agreement ≥ 0.75 (aggregate) — quarterly"
+    - "Nurse discordance rate 8–20% (too low = automation bias; too high = clinical concern)"
+    - "Confidence suppression rate < 15% (predictions below 0.60 threshold) — monthly"
+    - "Italian exact agreement ≥ 0.76 — quarterly (improvement target)"
+
+  drift_detection_method: >
+    Monthly distribution monitoring on vital sign features (PSI). Quarterly
+    re-validation on rolling prospective cohort (n ≈ 5 000/quarter per language).
+
+  update_trigger_thresholds: >
+    Under-triage rate > 5% at aggregate OR > 7% for any subgroup → clinical hold
+    and emergency Medical Advisory Board review. Category agreement drop > 0.03
+    → mandatory re-evaluation before next deployment.
+
+  responsible_person: Dr. Lena Fischer, CMO (l.fischer@medai-diagnostics.ch)
+  review_frequency: Monthly PMCF dashboard; quarterly review; annual PMCF report
+
+serious_incidents: []
+
+evidence_index:
+  - id: EV-001
+    type: DPA register — medical data
+    uri: evidence/dpa_register_medical.pdf
+    used_in_sections: ["Section 2"]
+  - id: EV-002
+    type: Prospective validation study report 2025
+    uri: evidence/validation_study_2025.pdf
+    used_in_sections: ["Section 3"]
+  - id: EV-003
+    type: Risk management file v3.0.1
+    uri: evidence/risk_management_file_v3.0.1.pdf
+    used_in_sections: ["Section 4", "Section 6"]
+  - id: EV-004
+    type: BSI Notified Body certificate
+    uri: evidence/bsi_certificate_2026.pdf
+    used_in_sections: ["Section 7"]
+  - id: EV-005
+    type: IEC 62304 compliance matrix
+    uri: evidence/iec62304_compliance_matrix.pdf
+    used_in_sections: ["Section 6"]
+  - id: EV-006
+    type: Medical Advisory Board minutes 2026-01-10
+    uri: evidence/mab_minutes_2026_01_10.pdf
+    used_in_sections: ["Section 4"]

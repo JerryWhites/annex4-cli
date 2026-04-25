@@ -1,0 +1,261 @@
+general_description:
+  provider:
+    name:
+      kind: system_metadata
+      value: TalentFlow AI GmbH
+      provenance:
+        source: manual
+        source_ref: migration
+        extracted_at: '2026-04-23'
+        extractor_version: '1.0'
+        confidence: 1.0
+    address:
+      kind: system_metadata
+      value: Musterstraße 1, 10115 Berlin, Germany
+      provenance:
+        source: manual
+        source_ref: migration
+        extracted_at: '2026-04-23'
+        extractor_version: '1.0'
+        confidence: 1.0
+    contact_email:
+      kind: system_metadata
+      value: compliance@talentflow-ai.de
+      provenance:
+        source: manual
+        source_ref: migration
+        extracted_at: '2026-04-23'
+        extractor_version: '1.0'
+        confidence: 1.0
+    authorized_signatory:
+      kind: system_metadata
+      value: Dr. Erika Muster
+      provenance:
+        source: manual
+        source_ref: migration
+        extracted_at: '2026-04-23'
+        extractor_version: '1.0'
+        confidence: 1.0
+  system:
+    name:
+      kind: system_metadata
+      value: TalentFlow ScreenAI
+      provenance:
+        source: manual
+        source_ref: migration
+        extracted_at: '2026-04-23'
+        extractor_version: '1.0'
+        confidence: 1.0
+    version:
+      kind: system_metadata
+      value: '1.1'
+      provenance:
+        source: manual
+        source_ref: migration
+        extracted_at: '2026-04-23'
+        extractor_version: '1.0'
+        confidence: 1.0
+    classification:
+      kind: system_metadata
+      value: High Risk
+      provenance:
+        source: manual
+        source_ref: migration
+        extracted_at: '2026-04-23'
+        extractor_version: '1.0'
+        confidence: 1.0
+    annex_iii_category:
+      kind: system_metadata
+      value: Employment, workers management and access to self-employment (Annex III,
+        point 4)
+      provenance:
+        source: manual
+        source_ref: migration
+        extracted_at: '2026-04-23'
+        extractor_version: '1.0'
+        confidence: 1.0
+    regulation_version:
+      kind: system_metadata
+      value: 2024-1689_base
+      provenance:
+        source: manual
+        source_ref: migration
+        extracted_at: '2026-04-23'
+        extractor_version: '1.0'
+        confidence: 1.0
+  intended_purpose:
+    description:
+      kind: system_metadata
+      value: Automated screening, ranking, and shortlisting of job applications for
+        white-collar and technical positions.
+      provenance:
+        source: manual
+        source_ref: migration
+        extracted_at: '2026-04-23'
+        extractor_version: '1.0'
+        confidence: 1.0
+    intended_users:
+      kind: system_metadata
+      value: HR professionals and recruiters
+      provenance:
+        source: manual
+        source_ref: migration
+        extracted_at: '2026-04-23'
+        extractor_version: '1.0'
+        confidence: 1.0
+    persons_affected:
+      kind: system_metadata
+      value: Job applicants
+      provenance:
+        source: manual
+        source_ref: migration
+        extracted_at: '2026-04-23'
+        extractor_version: '1.0'
+        confidence: 1.0
+    foreseeable_misuse:
+    - kind: system_metadata
+      value: Use without human oversight
+      provenance:
+        source: manual
+        source_ref: migration
+        extracted_at: '2026-04-23'
+        extractor_version: '1.0'
+        confidence: 1.0
+    - kind: system_metadata
+      value: Filtering on protected attributes
+      provenance:
+        source: manual
+        source_ref: migration
+        extracted_at: '2026-04-23'
+        extractor_version: '1.0'
+        confidence: 1.0
+monitoring_functioning_control:
+  accuracy_metrics:
+  - name:
+      kind: system_metadata
+      value: Balanced Accuracy
+      provenance:
+        source: manual
+        source_ref: migration
+        extracted_at: '2026-04-23'
+        extractor_version: '1.0'
+        confidence: 1.0
+    aggregate_value:
+      kind: system_metadata
+      value: '0.86'
+      provenance:
+        source: manual
+        source_ref: migration
+        extracted_at: '2026-04-23'
+        extractor_version: '1.0'
+        confidence: 1.0
+risk_management:
+  identified_risks:
+  - risk:
+      kind: system_metadata
+      value: Disparate impact on protected demographic groups
+      provenance:
+        source: manual
+        source_ref: migration
+        extracted_at: '2026-04-23'
+        extractor_version: '1.0'
+        confidence: 1.0
+    likelihood:
+      kind: system_metadata
+      value: Medium
+      provenance:
+        source: manual
+        source_ref: migration
+        extracted_at: '2026-04-23'
+        extractor_version: '1.0'
+        confidence: 1.0
+    impact:
+      kind: system_metadata
+      value: High
+      provenance:
+        source: manual
+        source_ref: migration
+        extracted_at: '2026-04-23'
+        extractor_version: '1.0'
+        confidence: 1.0
+    mitigation:
+      kind: system_metadata
+      value: Fairness-aware training with demographic parity constraint
+      provenance:
+        source: manual
+        source_ref: migration
+        extracted_at: '2026-04-23'
+        extractor_version: '1.0'
+        confidence: 1.0
+    residual_risk:
+      kind: system_metadata
+      value: Low
+      provenance:
+        source: manual
+        source_ref: migration
+        extracted_at: '2026-04-23'
+        extractor_version: '1.0'
+        confidence: 1.0
+    accepted_by:
+      kind: system_metadata
+      value: Chief Risk Officer
+      provenance:
+        source: manual
+        source_ref: migration
+        extracted_at: '2026-04-23'
+        extractor_version: '1.0'
+        confidence: 1.0
+  - risk:
+      kind: system_metadata
+      value: Video interview bias across cultural backgrounds
+      provenance:
+        source: manual
+        source_ref: migration
+        extracted_at: '2026-04-23'
+        extractor_version: '1.0'
+        confidence: 1.0
+    likelihood:
+      kind: system_metadata
+      value: Medium
+      provenance:
+        source: manual
+        source_ref: migration
+        extracted_at: '2026-04-23'
+        extractor_version: '1.0'
+        confidence: 1.0
+    impact:
+      kind: system_metadata
+      value: Medium
+      provenance:
+        source: manual
+        source_ref: migration
+        extracted_at: '2026-04-23'
+        extractor_version: '1.0'
+        confidence: 1.0
+    mitigation:
+      kind: system_metadata
+      value: Cultural bias testing and audit of proxies for protected characteristics
+      provenance:
+        source: manual
+        source_ref: migration
+        extracted_at: '2026-04-23'
+        extractor_version: '1.0'
+        confidence: 1.0
+    residual_risk:
+      kind: system_metadata
+      value: Low
+      provenance:
+        source: manual
+        source_ref: migration
+        extracted_at: '2026-04-23'
+        extractor_version: '1.0'
+        confidence: 1.0
+    accepted_by:
+      kind: system_metadata
+      value: Chief Risk Officer
+      provenance:
+        source: manual
+        source_ref: migration
+        extracted_at: '2026-04-23'
+        extractor_version: '1.0'
+        confidence: 1.0

@@ -1,0 +1,87 @@
+# Maps each of the nine Annex IV sections to the Articles that govern them.
+# Used to surface the correct legal citation alongside each section in generated documents.
+
+sections:
+  - annex_iv_section: 1
+    title: "General description of the AI system"
+    governing_articles:
+      - "Article 3"       # Definitions (provider, deployer, intended purpose)
+      - "Article 11"      # Technical documentation obligation
+      - "Article 13(3)"   # Instructions for use — provider identity, intended purpose
+      - "Article 26"      # Deployer obligations where relevant
+    description: >
+      Provider identity, system name and version, intended purpose, persons affected,
+      intended users, foreseeable misuse scenarios.
+
+  - annex_iv_section: 2
+    title: "Detailed description of elements and development process"
+    governing_articles:
+      - "Article 10"      # Data and data governance (training, validation, test sets; bias)
+      - "Article 11"      # Technical documentation — architecture, design choices
+      - "Article 13(3)(b)(vi)"  # Input data specifications in instructions for use
+    description: >
+      Development methodology, system architecture, input/output specification,
+      training/validation/test data sources, data governance, bias examination,
+      residual data gaps (Article 10(2)(f)–(g)).
+
+  - annex_iv_section: 3
+    title: "Monitoring, functioning and control"
+    governing_articles:
+      - "Article 14"      # Human oversight measures
+      - "Article 15"      # Accuracy, robustness and cybersecurity
+      - "Article 13(3)(b)(ii)"  # Accuracy metrics in instructions for use
+    description: >
+      Capabilities and limitations, foreseeable unintended outcomes, human oversight
+      measures, accuracy metrics with subpopulation breakdowns, robustness testing
+      results, cybersecurity controls.
+
+  - annex_iv_section: 4
+    title: "Risk management system"
+    governing_articles:
+      - "Article 9"       # Risk management system — identification, evaluation, mitigation
+    description: >
+      Risk identification and analysis, risk evaluation, risk management measures,
+      residual risk acceptance, lifecycle gates for risk review.
+
+  - annex_iv_section: 5
+    title: "Changes made throughout the lifecycle"
+    governing_articles:
+      - "Article 43(4)"   # Substantial modification triggers new conformity assessment
+      - "Article 11(3)"   # Technical documentation must be kept up to date
+    description: >
+      Record of changes to the system, distinction between substantial and
+      non-substantial modifications, approval records.
+
+  - annex_iv_section: 6
+    title: "List of harmonised standards applied"
+    governing_articles:
+      - "Article 40"      # Presumption of conformity via harmonised standards
+      - "Article 41"      # Common specifications where no harmonised standard exists
+    description: >
+      Harmonised standards applied in full or in part, with references published in
+      the Official Journal; where not applied, description of alternative solutions.
+
+  - annex_iv_section: 7
+    title: "EU declaration of conformity"
+    governing_articles:
+      - "Article 47"      # EU declaration of conformity — content and obligations
+      - "Article 43"      # Conformity assessment procedure
+    description: >
+      Reference to or copy of the EU declaration of conformity, declaration date,
+      notified body information where applicable.
+
+  - annex_iv_section: 8
+    title: "Post-market monitoring plan"
+    governing_articles:
+      - "Article 72"      # Post-market monitoring — system, plan, data collection
+    description: >
+      Post-market monitoring system description, performance KPIs, drift detection
+      thresholds, responsible person, review frequency.
+
+  - annex_iv_section: 9
+    title: "Serious incidents log"
+    governing_articles:
+      - "Article 73"      # Reporting of serious incidents — timelines and recipients
+    description: >
+      Log of serious incidents, causal link assessment, corrective actions taken,
+      reports submitted to market surveillance authorities.

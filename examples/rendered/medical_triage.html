@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Informational tool output; not legal advice.">
+  <meta name="generator" content="annex4-cli">
+  <title>MedTriage Assist v3.0.1 Annex IV Technical Documentation — annex4-cli draft, not legal advice</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: Georgia, "Times New Roman", serif; font-size: 14px; line-height: 1.7;
+           color: #1a1a1a; max-width: 1000px; margin: 0 auto; padding: 2.5rem 2rem; }
+    h1 { font-size: 1.7rem; border-bottom: 3px solid #003399; padding-bottom: 0.4rem; margin-bottom: 0.3rem; }
+    h2 { font-size: 1.25rem; border-bottom: 1px solid #003399; color: #003399;
+         margin-top: 2.5rem; padding-bottom: 0.2rem; }
+    h3 { font-size: 1rem; margin-top: 1.4rem; margin-bottom: 0.3rem; color: #333; }
+    table { width: 100%; border-collapse: collapse; margin: 0.8rem 0 1.2rem; font-size: 13px; }
+    th { background: #003399; color: #fff; padding: 0.4rem 0.6rem; text-align: left; font-weight: bold; }
+    td { padding: 0.4rem 0.6rem; border-bottom: 1px solid #dde; vertical-align: top; }
+    tr:nth-child(even) td { background: #f4f6fb; }
+    .meta-table td:first-child { font-weight: bold; width: 40%; color: #444; }
+    .disclaimer { background: #fffbe6; border-left: 4px solid #e0b800; padding: 0.8rem 1rem;
+                  margin: 1.2rem 0; font-size: 13px; }
+    .toc { background: #f0f4ff; border: 1px solid #c0cff0; border-radius: 4px;
+           padding: 1rem 1.5rem; margin-bottom: 2rem; }
+    .toc ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+    .toc li { margin: 0.2rem 0; }
+    .toc a { color: #003399; text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+    .cite { font-size: 11px; color: #666; font-style: italic; margin-left: 0.5rem; }
+    .badge-high { color: #cc0000; font-weight: bold; }
+    .badge-medium { color: #e07000; font-weight: bold; }
+    .badge-open { color: #cc0000; }
+    .badge-closed { color: #008800; }
+    .empty { color: #999; font-style: italic; }
+    .footer { margin-top: 3rem; border-top: 1px solid #ccc; padding-top: 0.8rem;
+              font-size: 11px; color: #888; text-align: center; }
+    @media print { body { max-width: 100%; padding: 1rem; } h2 { page-break-before: always; } }
+    @page { margin: 2cm; @bottom-center { content: "annex4-cli draft, not legal advice — " attr(data-reg-version); font-size: 9px; color: #888; } }
+  </style>
+</head>
+<body>
+
+
+<h1>Annex IV Technical Documentation</h1>
+<p>
+  <strong>MedTriage Assist</strong> &mdash; v3.0.1<br>
+  <span class="cite">Regulation (EU) 2024/1689 &bull; Annex IV</span>
+</p>
+
+<div class="disclaimer">
+  <strong>Scope.</strong> This technical documentation is produced to support compliance with
+  Article&nbsp;11 and Annex&nbsp;IV of Regulation&nbsp;(EU)&nbsp;2024/1689. It does not
+  constitute a conformity assessment. This document is informational and is not legal advice.
+</div>
+
+<div class="toc">
+  <strong>Table of Contents</strong>
+  <ol>
+    <li><a href="#s1">General description of the AI system</a></li>
+    <li><a href="#s2">Detailed description of elements and development process</a></li>
+    <li><a href="#s3">Monitoring, functioning and control</a></li>
+    <li><a href="#s4">Risk management system (Article 9)</a></li>
+    <li><a href="#s5">Lifecycle changes</a></li>
+    <li><a href="#s6">Harmonised standards applied</a></li>
+    <li><a href="#s7">EU declaration of conformity</a></li>
+    <li><a href="#s8">Post-market monitoring plan (Article 72)</a></li>
+    <li><a href="#s9">Serious incidents log (Article 73)</a></li>
+    <li><a href="#sa">Appendix A &mdash; Evidence index</a></li>
+  </ol>
+</div>
+
+<!-- ═══════════════════════════ Section 1 ═══════════════════════════ -->
+<h2 id="s1">1. General description of the AI system <span class="cite">Annex IV §1</span></h2>
+
+<h3>1.1 Provider</h3>
+<table class="meta-table">
+  <tr><td>Provider name</td><td>MedAI Diagnostics AG</td></tr>
+  <tr><td>Registration number</td><td>CHE-123.456.789 (Handelsregister Zürich)</td></tr>
+  <tr><td>Registered address</td><td>Binzmühlestrasse 130, 8050 Zürich, Switzerland</td></tr>
+  <tr><td>Market surveillance contact</td><td>regulatory@medai-diagnostics.ch</td></tr>
+  <tr><td>Authorised signatory</td><td>Dr. Lena Fischer, Chief Medical Officer</td></tr>
+  <tr><td>AI Governance owner</td><td>Marco Bruni, AI Safety Director</td></tr>
+  <tr><td>EU representative</td><td>MedAI Diagnostics EU S.à r.l., Rue du Kiem 103, L-1857 Luxembourg</td></tr>
+</table>
+
+<h3>1.2 System identity</h3>
+<table class="meta-table">
+  <tr><td>System name</td><td>MedTriage Assist</td></tr>
+  <tr><td>Version</td><td>3.0.1</td></tr>
+  <tr><td>Git commit</td><td>c9e2f174</td></tr>
+  <tr><td>Release date</td><td>2026-01-20</td></tr>
+  <tr><td>Risk classification</td><td>High-risk — Annex III §1(b) / Annex I (MDR Class IIa), Article 6(1)</td></tr>
+  <tr><td>Annex III category</td><td>Biometrics / Medical device safety component — Annex III §1(b)</td></tr>
+  <tr><td>Regulation version</td><td>2024-1689_base</td></tr>
+</table>
+
+<h3>1.3 Intended purpose</h3>
+<table class="meta-table">
+  <tr><td>Description</td><td>MedTriage Assist is an AI-assisted clinical decision support tool for emergency department triage nurses. The system analyses structured patient data (vital signs, chief complaint, triage assessment) and proposes a Manchester Triage System (MTS) category [1–5] to support — not replace — the triage nurse&#39;s clinical judgment. The system is a software medical device under Regulation (EU) 2017/745 (MDR) and has been CE-marked as a Class IIa device.
+</td></tr>
+  <tr><td>Intended users</td><td>Registered triage nurses and emergency physicians at hospitals using the integrated emergency department information system (EDIS). Clinical training on the system required before activation. All triage decisions remain the clinical responsibility of the healthcare professional.
+</td></tr>
+  <tr><td>Deployment form</td><td>Embedded module within the hospital EDIS; displayed on triage workstation. Not accessible via consumer-facing interfaces. Not a standalone application.
+</td></tr>
+  <tr><td>Geographic scope</td><td>EU member states with validated language support — DE, FR, NL, IT, ES</td></tr>
+  <tr><td>Persons affected</td><td>Patients presenting to emergency departments at hospitals using MedTriage Assist. Patients or their representatives are informed of AI-assisted triage via admission documentation.
+</td></tr>
+</table>
+
+<h3>1.4 Foreseeable misuse</h3>
+<ul>
+<li>Delegation of triage decision to the AI without clinical nurse review</li><li>Use outside emergency department triage context (e.g., ward prioritisation)</li><li>Use for paediatric patients without the separately validated paediatric module</li><li>Deployment in languages outside the validated five-language scope</li></ul>
+
+<!-- ═══════════════════════════ Section 2 ═══════════════════════════ -->
+<h2 id="s2">2. Development process <span class="cite">Annex IV §2</span></h2>
+
+<table class="meta-table">
+  <tr><td>Methodology</td><td>Multimodal neural network trained on retrospective triage records from 14 EU emergency departments (2019–2024). Text encoder (ClinicalBERT, multilingual, fine-tuned) processes chief complaint; structured vital sign encoder (two-layer MLP) processes numeric clinical parameters. Late fusion via attention mechanism. Class-weighted cross-entropy loss to address class imbalance (MTS 1–2 cases rare).
+</td></tr>
+  <tr><td>Architecture</td><td>Input: chief complaint text (max 512 tokens) + structured vital signs (12 fields). Text branch: ClinicalBERT-multilingual (110M params, fine-tuned 3 epochs). Vitals branch: 2-layer MLP [12 → 64 → 32]. Fusion: cross-attention [32 → 32]. Output head: softmax over 5 MTS categories. Inference: CPU, &lt; 200ms per prediction. Model frozen at deployment; no federated or online learning.
+</td></tr>
+  <tr><td>Inputs</td><td>(1) Chief complaint: free-text entered by triage nurse (5–200 words, 5 validated languages). (2) Vital signs: heart rate, blood pressure (systolic/diastolic), SpO2, respiratory rate, temperature, Glasgow Coma Scale, pain scale [0–10], age (categorical), sex at birth. No imaging, no laboratory results, no patient history data used at this stage.
+</td></tr>
+  <tr><td>Outputs</td><td>Proposed MTS triage category [1 = Immediate, 2 = Very Urgent, 3 = Urgent, 4 = Standard, 5 = Non-Urgent] with confidence score. Top-3 reasoning factors displayed in plain clinical language. The proposal is displayed alongside the MTS decision flowchart; the nurse selects the final category independently.
+</td></tr>
+  <tr><td>Pre-trained components</td><td>ClinicalBERT-multilingual (Hugging Face, Apache-2.0). Fine-tuned on MedAI retrospective data with full weight updates. Original pre-training data: PubMed, MIMIC-III (de-identified), multilingual clinical notes corpus.
+</td></tr>
+  <tr><td>Design choices rationale</td><td>Late fusion (rather than early fusion) chosen to preserve interpretability of each modality independently, enabling clinical validation of the text vs vitals contribution to the prediction. Attention-based fusion makes cross-modal reasoning auditable by clinical AI experts.
+</td></tr>
+</table>
+
+<h3>2.1 Training data sources</h3>
+<table>
+  <tr><th>Name</th><th>Origin</th><th>Volume</th><th>Licence</th></tr>
+  <tr>
+    <td>MedAI Retrospective Triage Dataset (EU) v3</td>
+    <td>De-identified triage records from 14 EU EDs in DE, FR, NL, IT, ES. Data transfer agreements under GDPR Art. 9 (health data) with each hospital. Ethics committee approval obtained at each site.
+</td>
+    <td>2 100 000 triage episodes; MTS labels verified by senior emergency physicians</td>
+    <td>Data Processing Agreements (health data); research use only</td>
+  </tr>
+</table>
+
+<h3>2.2 Bias analysis</h3>
+<table>
+  <tr><th>Attribute</th><th>Population share</th><th>Reference share</th><th>Delta</th><th>Action taken</th></tr>
+  <tr>
+    <td>Sex: female patients</td>
+    <td>51.2%</td>
+    <td>52.1% (EU ED population — ECDC Emergency Care Stats)</td>
+    <td>-0.9 pp</td>
+    <td>No significant disparity detected. Under-triage rate for female patients (MTS category proposed too low by ≥ 1 level): 3.1% vs 3.4% for male (within acceptable clinical variance). Monitored quarterly.
+</td>
+  </tr>
+  <tr>
+    <td>Age: 75+ (frail elderly)</td>
+    <td>18.3%</td>
+    <td>21.0% (EU ED population)</td>
+    <td>-2.7 pp (higher under-triage rate: 5.8% vs 3.2% aggregate)</td>
+    <td>Age-specific recalibration layer applied for 75+ cohort. Post-recalibration under-triage rate: 4.1%. Residual gap documented; clinical protocols require senior nurse review for all 75+ patients regardless of AI category proposal.
+</td>
+  </tr>
+</table>
+
+<!-- ═══════════════════════════ Section 3 ═══════════════════════════ -->
+<h2 id="s3">3. Monitoring, functioning and control <span class="cite">Annex IV §3 / Article 15</span></h2>
+
+<table class="meta-table">
+  <tr><td>Capabilities and limitations</td><td>Validated for adult patients (≥ 18) presenting to emergency departments in EU EDs with validated language support. NOT for: paediatric patients (separate module required), psychiatric emergencies (insufficient training data), patients unable to provide chief complaint, out-of-hospital triage, or languages beyond the 5 validated. Accuracy decreases for rare presentations (&lt; 0.5% of training data).
+</td></tr>
+  <tr><td>Foreseeable unintended outcomes</td><td>(1) Under-triage for elderly frail patients — structurally higher rate documented; mitigated by mandatory senior nurse review protocol. (2) Automation bias — nurses anchoring on AI proposal rather than independent assessment. (3) Atypical presentations (NSTEMI without chest pain, stroke without focal deficit) may be under-triaged if chief complaint does not reflect acuity. (4) Language model hallucination risk for rare clinical terms not in training vocabulary — mitigation: confidence threshold filter (proposals below 0.60 confidence suppressed).
+</td></tr>
+  <tr><td>Human oversight measures</td><td>(1) AI proposal is advisory only — nurse selects final MTS category independently. The system cannot submit a triage category; only the nurse can confirm. (2) Proposals with confidence &lt; 0.60 are not displayed; nurse triages without AI input. (3) All AI proposals and final nurse decisions logged; discordance &gt; 1 MTS level flagged for clinical lead review within 24 hours. (4) Mandatory 4-hour competency training for all triage staff before system activation. (5) Monthly discordance report reviewed by Chief Medical Officer.
+</td></tr>
+  <tr><td>Cybersecurity measures</td><td>MDR-compliant cybersecurity controls (ENISA medical device cybersecurity guidance). EDIS integration via HL7 FHIR R4 over TLS 1.3. No patient data leaves hospital network. Model inference runs on-premises (hospital server; model weights not accessible via API). Annual cybersecurity audit by NL-certified MedTech auditor.
+</td></tr>
+</table>
+
+<h3>3.1 Accuracy metrics</h3>
+<h4>Exact MTS category agreement (AI proposal vs physician gold standard)</h4>
+<table class="meta-table">
+  <tr><td>Aggregate value</td><td>0.783</td></tr>
+  <tr><td>Confidence interval</td><td>[0.771, 0.795]</td></tr>
+  <tr><td>Methodology note</td><td>Prospective validation cohort 2025 (42 000 episodes). Physician gold standard: consensus of 2 senior emergency physicians reviewing de-identified records.
+</td></tr>
+</table>
+<table>
+  <tr><th>Subpopulation</th><th>N</th><th>Value</th><th>CI</th><th>Δ vs. aggregate</th></tr>
+  <tr>
+    <td>MTS 1–2 (Immediate/Very Urgent)</td>
+    <td>—</td>
+    <td>0.891</td>
+    <td>—</td>
+    <td>+0.108</td>
+  </tr>
+  <tr>
+    <td>MTS 3–4 (Urgent/Standard)</td>
+    <td>—</td>
+    <td>0.772</td>
+    <td>—</td>
+    <td>-0.011</td>
+  </tr>
+  <tr>
+    <td>Age: 75+</td>
+    <td>—</td>
+    <td>0.741</td>
+    <td>—</td>
+    <td>-0.042</td>
+  </tr>
+  <tr>
+    <td>Language: Italian</td>
+    <td>—</td>
+    <td>0.758</td>
+    <td>—</td>
+    <td>-0.025</td>
+  </tr>
+</table>
+<h4>Under-triage rate (AI proposes category lower than gold standard by ≥ 1)</h4>
+<table class="meta-table">
+  <tr><td>Aggregate value</td><td>0.032</td></tr>
+  <tr><td>Confidence interval</td><td>[0.028, 0.036]</td></tr>
+  <tr><td>Methodology note</td><td>Clinical safety metric. Under-triage is more dangerous than over-triage. Threshold: under-triage rate &lt; 5% at aggregate and &lt; 7% for any subgroup.
+</td></tr>
+</table>
+<table>
+  <tr><th>Subpopulation</th><th>N</th><th>Value</th><th>CI</th><th>Δ vs. aggregate</th></tr>
+  <tr>
+    <td>Age: 75+</td>
+    <td>—</td>
+    <td>0.041</td>
+    <td>—</td>
+    <td>+0.009</td>
+  </tr>
+  <tr>
+    <td>MTS 1 (Immediate)</td>
+    <td>—</td>
+    <td>0.018</td>
+    <td>—</td>
+    <td>-0.014</td>
+  </tr>
+</table>
+
+<h3>3.2 Robustness issues</h3>
+<table>
+  <tr><th>ID</th><th>Category</th><th>Severity</th><th>Status</th><th>Rationale</th></tr>
+  <tr>
+    <td>ROB-001</td>
+    <td>Distribution shift — Italian language performance gap</td>
+    <td class="badge-medium">Medium</td>
+    <td class="badge-open">Open</td>
+    <td>Italian exact agreement 2.5 pp below aggregate; attributed to lower volume of Italian training data (9% of corpus vs 26% Italian-speaking population). Targeted data collection from 3 Italian EDs initiated Q1 2026. Corrective action (Italian-specific fine-tuning) planned for v3.1 Q3 2026.
+</td>
+  </tr>
+</table>
+
+<!-- ═══════════════════════════ Section 4 ═══════════════════════════ -->
+<h2 id="s4">4. Risk management system <span class="cite">Article 9</span></h2>
+
+<table class="meta-table">
+  <tr><td>Process description</td><td>Continuous risk management per ISO 14971:2019 (medical device risk management). Clinical risk review by Medical Advisory Board (CMO, Head of Emergency Medicine ×2, Patient Safety Officer) biannually. AI Governance review (AI Safety Director, legal counsel, DPO) quarterly. All HIGH clinical risks block release.
+</td></tr>
+  <tr><td>Residual risk acceptance</td><td>All residual risks accepted by the Medical Advisory Board 2026-01-10. Acceptance is conditional on the monitoring programme and clinical protocols remaining active. Re-evaluation required at each major version release.
+</td></tr>
+</table>
+
+<table>
+  <tr><th>Risk</th><th>Likelihood</th><th>Impact</th><th>Mitigation</th><th>Residual risk</th><th>Accepted by</th></tr>
+  <tr>
+    <td>Under-triage of frail elderly patients (75+) — MTS category too low</td>
+    <td>High</td>
+    <td>High</td>
+    <td>Age-specific recalibration applied (under-triage rate reduced from 8.2% to 4.1%). Clinical protocol mandates senior nurse review for all 75+ patients. Monthly monitoring with 5% threshold for emergency clinical review.
+</td>
+    <td>Under-triage rate 4.1% in 75+ cohort; accepted with mandatory protocol.</td>
+    <td>Medical Advisory Board, 2026-01-10</td>
+  </tr>
+  <tr>
+    <td>Automation bias — nurse over-reliance on AI proposal</td>
+    <td>Medium</td>
+    <td>High</td>
+    <td>UX design: AI proposal appears as a secondary panel, not the primary decision interface. Mandatory training includes bias awareness module. Discordance monitoring flags any nurse with systematically low override rate (&lt; 5% over 30 days) for coaching.
+</td>
+    <td>Medium — behavioural risk; ongoing training and monitoring mitigate.</td>
+    <td>Chief Medical Officer, 2026-01-10</td>
+  </tr>
+  <tr>
+    <td>MDR Article 120 — failure to maintain Notified Body certification</td>
+    <td>Low</td>
+    <td>High</td>
+    <td>Annual MDR surveillance audit scheduled with BSI Group (Notified Body 2797). Post-market clinical follow-up (PMCF) plan maintained per MDCG 2020-7.
+</td>
+    <td>Low — contractual and procedural controls in place.</td>
+    <td>Chief Regulatory Officer, 2026-01-10</td>
+  </tr>
+</table>
+
+<!-- ═══════════════════════════ Section 5 ═══════════════════════════ -->
+<h2 id="s5">5. Lifecycle changes <span class="cite">Article 16(d)</span></h2>
+
+<table class="meta-table">
+  <tr><td>Previous version</td><td>3.0.0</td></tr>
+  <tr><td>Substantiality assessment</td><td>v3.0.0 → v3.0.1: Non-substantial patch. Bug fix in confidence calibration for MTS category 1 (affected &lt; 0.3% of predictions, no safety impact). Confirmed non-substantial by Medical Advisory Board 2026-01-18 and Notified Body (BSI Group pre-notification accepted 2026-01-19).
+</td></tr>
+</table>
+
+<table>
+  <tr><th>Field</th><th>Change description</th><th>Trigger</th><th>Substantial?</th><th>Approved by</th></tr>
+  <tr>
+    <td>monitoring_functioning_control.accuracy_metrics</td>
+    <td>Calibration correction for MTS 1 confidence score — probability was systematically over-estimated by 0.04 for high-acuity cases.
+</td>
+    <td>Post-market surveillance finding from Q4 2025 monthly report</td>
+    <td>False</td>
+    <td>Chief Medical Officer</td>
+  </tr>
+</table>
+
+<!-- ═══════════════════════════ Section 6 ═══════════════════════════ -->
+<h2 id="s6">6. Harmonised standards <span class="cite">Annex IV §6</span></h2>
+
+<table>
+  <tr><th>Standard</th><th>Clause</th><th>Conformance</th><th>Evidence</th></tr>
+  <tr>
+    <td>IEC 62304:2006+AMD1:2015 — Medical device software lifecycle</td>
+    <td>Full scope (Class B software)</td>
+    <td>Compliant — verified in MDR Technical File (Annex II)</td>
+    <td>evidence/iec62304_compliance_matrix.pdf</td>
+  </tr>
+  <tr>
+    <td>ISO 14971:2019 — Medical device risk management</td>
+    <td>Full scope</td>
+    <td>Compliant — risk management file maintained per standard</td>
+    <td>evidence/risk_management_file_v3.0.1.pdf</td>
+  </tr>
+  <tr>
+    <td>ISO/IEC 62443-4-2 — Cybersecurity for industrial systems (applied to medical)</td>
+    <td>SL-1 requirements</td>
+    <td>Partial — cybersecurity gap analysis complete; full compliance targeted Q4 2026</td>
+    <td>evidence/cybersecurity_gap_analysis.pdf</td>
+  </tr>
+</table>
+
+<!-- ═══════════════════════════ Section 7 ═══════════════════════════ -->
+<h2 id="s7">7. EU declaration of conformity <span class="cite">Annex IV §7 / Article 47</span></h2>
+
+<table class="meta-table">
+  <tr><td>Declaration reference</td><td>DOC-MAD-2026-MT-001</td></tr>
+  <tr><td>Declaration date</td><td>2026-01-20</td></tr>
+  <tr><td>Notified body required</td><td>True</td></tr>
+  <tr><td>Notified body name</td><td>BSI Group (Notified Body 2797)</td></tr>
+  <tr><td>Notified body certificate</td><td>CE 2797/MDR/2026/001 — MedTriage Assist v3.x, Class IIa</td></tr>
+  <tr><td>Notes</td><td>MDR Class IIa medical device; Notified Body conformity assessment required under Article 52(4) MDR. Also classified as high-risk AI under Annex I MDR (safety component), invoking Article 6(1) of the EU AI Act. MDR CE mark: MDD → MDR transition completed 2025-12-31.
+</td></tr>
+</table>
+
+<!-- ═══════════════════════════ Section 8 ═══════════════════════════ -->
+<h2 id="s8">8. Post-market monitoring plan <span class="cite">Article 72</span></h2>
+
+<table class="meta-table">
+  <tr><td>Monitoring approach</td><td>Post-Market Clinical Follow-Up (PMCF) per MDCG 2020-7 and MDR Annex XIV. Monthly discordance analysis (AI proposal vs nurse decision vs final clinical outcome). Quarterly under-triage rate evaluation against 5% threshold. Annual PMCF report submitted to BSI Group. Serious incident reporting per MDR Article 87 and EU AI Act Article 73.
+</td></tr>
+  <tr><td>Drift detection method</td><td>Monthly distribution monitoring on vital sign features (PSI). Quarterly re-validation on rolling prospective cohort (n ≈ 5 000/quarter per language).
+</td></tr>
+  <tr><td>Update trigger thresholds</td><td>Under-triage rate &gt; 5% at aggregate OR &gt; 7% for any subgroup → clinical hold and emergency Medical Advisory Board review. Category agreement drop &gt; 0.03 → mandatory re-evaluation before next deployment.
+</td></tr>
+  <tr><td>Responsible person</td><td>Dr. Lena Fischer, CMO (l.fischer@medai-diagnostics.ch)</td></tr>
+  <tr><td>Review frequency</td><td>Monthly PMCF dashboard; quarterly review; annual PMCF report</td></tr>
+</table>
+
+<h3>Key performance indicators</h3>
+<ul>
+<li>Under-triage rate &lt; 5% (aggregate) — monthly</li><li>Under-triage rate &lt; 7% for any subgroup — monthly</li><li>Exact category agreement ≥ 0.75 (aggregate) — quarterly</li><li>Nurse discordance rate 8–20% (too low = automation bias; too high = clinical concern)</li><li>Confidence suppression rate &lt; 15% (predictions below 0.60 threshold) — monthly</li><li>Italian exact agreement ≥ 0.76 — quarterly (improvement target)</li></ul>
+
+<!-- ═══════════════════════════ Section 9 ═══════════════════════════ -->
+<h2 id="s9">9. Serious incidents log <span class="cite">Article 73</span></h2>
+
+<p class="empty">No serious incidents recorded.</p>
+
+<!-- ═══════════════════════════ Appendix A ═══════════════════════════ -->
+<h2 id="sa">Appendix A — Evidence index</h2>
+
+<table>
+  <tr><th>ID</th><th>Type</th><th>URI</th><th>Used in sections</th></tr>
+  <tr>
+    <td>EV-001</td>
+    <td>DPA register — medical data</td>
+    <td>evidence/dpa_register_medical.pdf</td>
+    <td>Section 2</td>
+  </tr>
+  <tr>
+    <td>EV-002</td>
+    <td>Prospective validation study report 2025</td>
+    <td>evidence/validation_study_2025.pdf</td>
+    <td>Section 3</td>
+  </tr>
+  <tr>
+    <td>EV-003</td>
+    <td>Risk management file v3.0.1</td>
+    <td>evidence/risk_management_file_v3.0.1.pdf</td>
+    <td>Section 4, Section 6</td>
+  </tr>
+  <tr>
+    <td>EV-004</td>
+    <td>BSI Notified Body certificate</td>
+    <td>evidence/bsi_certificate_2026.pdf</td>
+    <td>Section 7</td>
+  </tr>
+  <tr>
+    <td>EV-005</td>
+    <td>IEC 62304 compliance matrix</td>
+    <td>evidence/iec62304_compliance_matrix.pdf</td>
+    <td>Section 6</td>
+  </tr>
+  <tr>
+    <td>EV-006</td>
+    <td>Medical Advisory Board minutes 2026-01-10</td>
+    <td>evidence/mab_minutes_2026_01_10.pdf</td>
+    <td>Section 4</td>
+  </tr>
+</table>
+
+<!-- ═══════════════ Appendix B — Provenance table ═══════════════ -->
+<h2 id="sb">Appendix B — Field provenance</h2>
+<p class="section-cite">Every field extracted by an ingestor carries machine-readable provenance.
+Fields attested by a human carry a ComplianceClaim reference.</p>
+
+
+<table>
+  <tr><th>Field</th><th>Value</th><th>Source</th><th>Ref</th><th>Extracted</th><th>Confidence</th><th>Conflict</th></tr>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+</table>
+
+<div class="disclaimer" style="margin-top:2rem; border-left-color:#003399;">
+  <strong>annex4-cli v2026 — informational tool only, not legal advice.</strong><br>
+  This technical documentation is produced by annex4-cli to support compliance with Article 11 and Annex IV of Regulation (EU) 2024/1689. It does not constitute a conformity assessment. Where third-party conformity assessment by a notified body is required under Article 43, obtaining that assessment remains the responsibility of the provider. This document is informational; it is not legal advice.
+</div>
+
+<div class="footer">
+  annex4-cli — informational tool, not legal advice &bull; 2026-04-24 19:15 UTC &bull; Regulation (EU) 2024/1689
+</div>
+
+</body>
+</html>

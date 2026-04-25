@@ -1,0 +1,65 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "annex4-cli"
+version = "0.1.0"
+description = "EU AI Act (Regulation (EU) 2024/1689) Annex IV technical documentation generator — informational tool, not legal advice"
+authors = [{name = "jer", email = "jirka1130@gmail.com"}]
+readme = "README.md"
+requires-python = ">=3.11"
+keywords = ["eu-ai-act", "annex-iv", "compliance-tool", "not-legal-advice", "mlops"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Legal Industry",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Office/Business :: Other",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "click",
+    "rich",
+    "pydantic>=2",
+    "pyyaml",
+    "jinja2",
+    "jsonschema",
+]
+
+[project.optional-dependencies]
+pdf = ["weasyprint"]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "ruff",
+    "types-PyYAML",
+    "pypdf",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["annex4*"]
+
+[project.scripts]
+annex4 = "annex4.cli:cli"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra -q"
+
+[tool.coverage.run]
+omit = [
+    "annex4/cli.py",           # shadowed by annex4/cli/ package — dead code
+    "annex4/ingestors/_stubs/*",  # cloud provider stubs — not implemented
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "if __name__ == .__main__.:",
+    "raise NotImplementedError",
+    "pragma: no cover",
+]
