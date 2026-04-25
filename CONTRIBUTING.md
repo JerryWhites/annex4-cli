@@ -5,7 +5,7 @@ First off, thank you for considering contributing to `annex4-cli`. It's people l
 ## Getting Started
 
 - Ensure you have Python 3.11+ and `uv` installed.
-- Clone the repository: `git clone https://github.com/<you>/annex4-cli.git`
+- Clone the repository: `git clone https://github.com/JerryWhites/annex4-cli.git`
 - Change into the directory: `cd annex4-cli`
 - Set up the development environment: `uv sync -e dev`
 - Activate the virtual environment: `source .venv/bin/activate` (or `.venv\Scripts\activate` on Windows)

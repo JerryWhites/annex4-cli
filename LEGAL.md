@@ -62,7 +62,7 @@ any related legal instrument, please open a GitHub issue using the
 make no commitment to any specific remediation timeline.
 
 ---
-Last updated: <DATE_TO_BE_FILLED_ON_RELEASE>
+Last updated: 2026-04-25
 Regulation pack version referenced: 2024-1689_base
-Authors: jer
-Contact: open a GitHub issue
+Authors: Jerry Whites
+Contact: https://github.com/JerryWhites/annex4-cli/issues

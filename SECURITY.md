@@ -13,7 +13,7 @@
 Please report security vulnerabilities by opening a **private** GitHub security
 advisory at:
 
-`https://github.com/<owner>/annex4-cli/security/advisories/new`
+`https://github.com/JerryWhites/annex4-cli/security/advisories/new`
 
 Include:
 - A description of the vulnerability and its potential impact

@@ -173,7 +173,7 @@ annex4-cli is an informational tool. It does not perform conformity assessment, 
 
 Run `annex4 legal` to print the disclaimer from the CLI at any time.
 
-Apache-2.0 © 2026 jer
+Apache-2.0 © 2026 Jerry Whites
 
 ---
 

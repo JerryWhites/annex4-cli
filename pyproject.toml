@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "annex4-cli"
 version = "0.1.0"
 description = "EU AI Act (Regulation (EU) 2024/1689) Annex IV technical documentation generator — informational tool, not legal advice"
-authors = [{name = "jer", email = "jirka1130@gmail.com"}]
+authors = [{name = "Jerry Whites", email = "jirka1130@gmail.com"}]
 readme = "README.md"
 requires-python = ">=3.11"
 keywords = ["eu-ai-act", "annex-iv", "compliance-tool", "not-legal-advice", "mlops"]
