@@ -4,11 +4,6 @@
 
 annex4-cli turns Annex IV compliance documentation from a legal fire-drill into a YAML file in your Git repo — validated, versioned, and rendered in under 10 minutes.
 
-[![Not Legal Advice](https://img.shields.io/badge/disclaimer-not%20legal%20advice-red)](LEGAL.md)
-[![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
-[![Python](https://img.shields.io/badge/python-3.11%2B-blue)](pyproject.toml)
-[![Tests](https://img.shields.io/badge/tests-315%20passing-brightgreen)](.github/workflows/ci.yml)
-
 > **This is an informational tool, not legal advice.** It does not perform conformity assessment or replace a Notified Body or qualified legal counsel. See [LEGAL.md](LEGAL.md).
 
 ---
