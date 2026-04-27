@@ -57,4 +57,4 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Coverage 90% (gate: ≥80%)
 - `ruff check annex4/` — 0 errors
 
-[0.1.0]: https://github.com/jer/annex4-cli/releases/tag/v0.1.0
+[0.1.0]: https://github.com/JerryWhites/annex4-cli/releases/tag/v0.1.0
