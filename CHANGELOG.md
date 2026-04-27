@@ -6,7 +6,7 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
-## [0.1.0] — Unreleased
+## [0.1.0] — 2026-04-27
 
 ### PR#1 — Regulation pack architecture
 - Versioned regulation data pack under `annex4/regulation/versions/2024-1689_base/`

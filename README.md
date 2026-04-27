@@ -19,10 +19,10 @@
 
 annex4-cli turns Annex IV compliance documentation from a legal fire-drill into a YAML file in your Git repo — validated, versioned, and rendered in under 10 minutes.
 
-![annex4-cli demo: classify → validate → render → diff in under 60 seconds](docs/demo.gif)
+![annex4-cli demo: classify → validate → render → diff in under 60 seconds](docs/demo.png)
 
 > _Demo: full Annex IV documentation workflow on the
-> [hr_screening reference dossier](examples/hr_screening.yaml) — 35 seconds._
+> [hr_screening reference dossier](examples/hr_screening.yaml)._
 
 ---
 

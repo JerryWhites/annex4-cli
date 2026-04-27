@@ -48,6 +48,7 @@ dev = [
     "pytest",
     "pytest-cov",
     "ruff",
+    "mypy",
     "types-PyYAML",
     "pypdf",
 ]
