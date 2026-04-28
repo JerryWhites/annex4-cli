@@ -277,4 +277,4 @@ class TestIngestCommand:
         result = CliRunner().invoke(
             cli, ["ingest", "--override", str(override), "--output", str(out)]
         )
-        assert "1 source" in result.output
+        assert "1 source" in result.output.replace("\n", " ")
