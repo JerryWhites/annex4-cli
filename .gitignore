@@ -40,3 +40,4 @@ Thumbs.db
 
 # Context folder (internal planning docs)
 Context/
+.claude/
